@@ -1,0 +1,122 @@
+:root {
+  --color-negro: rgb(12, 12, 12);
+  --color-blanco: rgb(246, 241, 241);
+}
+
+@font-face {
+  font-family: "AbrilFatface";
+  src: url("resources/fonts/AbrilFatface-Regular.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Prata";
+  src: url("resources/fonts/Prata-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
+body {
+  margin: 0;
+  font-family: "Prata", serif;
+  background-color: rgba(132, 131, 131, 0.415);
+}
+
+/* Cabecera */
+
+.seccionhead {
+  width: 100%;
+  height: 300px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(to right, var(--color-negro) 50%, var(--color-blanco) 50%);
+  margin-bottom: 50px;
+}
+
+.separadorblack {
+    background-color: var(--color-negro);
+    width: 100%;
+    height: 1px;
+}
+
+h1 {
+  font-family: AbrilFatface;
+  font-size: 10rem;
+  font-weight: bold;
+  mix-blend-mode: difference;
+  color: var(--color-blanco);
+}
+
+.bg-blanco {
+  color: var(--color-negro);
+  background-color: var(--color-blanco);
+}
+
+.bg-negro {
+  color: var(--color-blanco);
+  background-color: var(--color-negro);
+}
+
+.grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 500px;    
+  width: 100%;
+}
+
+.grid div {
+  border-radius: 3px;
+}
+
+.gridimg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gridimg img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.gridtxt {
+  padding: 10px;
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+footer {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+
+
+/* .navhead */
+.navhead {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: var(--color-blanco);
+  margin-bottom: 1px;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+}
+
+.navdiv {
+  padding: 4px;
+  margin: 4px;
+}
+
+.navdiv a {
+  font-size: 1.1rem;
+  text-decoration: none;  
+  color: inherit; 
+}

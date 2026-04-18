@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Ang</title>
+    <link rel="stylesheet" href="style.css" />
+
+</head>
+
+<body>
+    <header>
+        <div>
+            <h3>Si algo malo pasa, no me hago responsable :)</h3>
+            <p>Pegad lista de moxfield (more -> export -> copy for moxfield)  ----   si dejas sideboard tambien lo descarga</p>
+            <!-- <input type="text" id="cartas" placeholder="texto cartas"> -->
+            <textarea id="cartas" placeholder="exportar de moxfield"></textarea>
+            <button onclick="buscarimg()">Busqueda descargar</button>
+        </div>
+    </header>
+    <div id="zonaboton"></div>
+    <div id="divprogreso"><progress id="progreso" max="0" value="0"></progress>
+        <p id="estado">Esperando descarga...</p>
+    </div>
+
+    <div id="error"></div>
+    <div id="num_cartas"></div>
+
+    <div id="resultado"></div>
+</body>
+
+<!-- scripts para zip y download -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="script.js"></script>
+
+
+</html>

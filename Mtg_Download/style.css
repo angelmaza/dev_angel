@@ -1,0 +1,147 @@
+        /* Estilos Generales */
+        body {
+            background-color: #2c2c2c;
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        #error {
+            text-align: center;
+            color: rgb(255, 65, 65);
+        }
+
+        #num_cartas {
+            text-align: center;
+            color: rgb(226, 222, 222);
+        }
+
+        /* Encabezado */
+        header {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #1f1f1f;
+            border-bottom: 4px solid orange;
+            padding: 15px;
+            flex-wrap: wrap;
+        }
+
+        header div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 45%;
+            min-width: 300px;
+        }
+
+        header div p {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: orange;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        header div input,
+        header div textarea {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid orange;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            font-size: 1em;
+        }
+
+        header div textarea {
+            height: 80px;
+        }
+
+        header div button {
+            width: 60%;
+            padding: 8px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: orange;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        header div button:hover {
+            background-color: #ff9800;
+        }
+
+        /* Zona de Botones */
+        #zonaboton {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .boton-descarga {
+            padding: 10px 15px;
+            background-color: #ff5722;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .boton-descarga:hover {
+            background-color: #e64a19;
+        }
+
+        /* Resultado - Cartas */
+        #resultado {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+        }
+
+        /* Tarjetas */
+        .card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #1f1f1f;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(255, 165, 0, 0.4);
+            transition: 0.3s ease;
+            width: 200px;
+            max-width: 200px;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 4px 4px 15px rgba(255, 165, 0, 0.6);
+        }
+
+        /* Texto dentro de las tarjetas */
+        .card-nombre {
+            font-size: 1em;
+            font-weight: bold;
+            margin: 10px 0;
+            color: white;
+        }
+
+        /* Imágenes de las cartas */
+        .card-imagen {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        #divprogreso {
+            display: none;
+        }
