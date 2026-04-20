@@ -2,38 +2,92 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magic Ang</title>
-    <link rel="stylesheet" href="style.css" />
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Magic Ang | PNG Downloader</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
-<body>
-    <header>
+<body data-lang-default="en">
+  <main class="pagina-descarga">
+    <section class="cabecera-descarga">
+      <div class="cabecera-top">
         <div>
-            <h3>Si algo malo pasa, no me hago responsable :)</h3>
-            <p>Pegad lista de moxfield (more -> export -> copy for moxfield)  ----   si dejas sideboard tambien lo descarga</p>
-            <!-- <input type="text" id="cartas" placeholder="texto cartas"> -->
-            <textarea id="cartas" placeholder="exportar de moxfield"></textarea>
-            <button onclick="buscarimg()">Busqueda descargar</button>
+          <h1 id="titulo-app">MTG PNG Downloader</h1>
+
         </div>
-    </header>
+
+        <div class="barra-idioma" aria-label="Selector de idioma">
+          <button
+            type="button"
+            class="boton-idioma activo"
+            id="boton-en"
+            onclick="cambiarIdioma('en')"
+            aria-pressed="true"
+          >
+            <span>ENG</span>
+          </button>
+
+          <button
+            type="button"
+            class="boton-idioma"
+            id="boton-es"
+            onclick="cambiarIdioma('es')"
+            aria-pressed="false"
+          >
+            <span>ESP</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="zona-editor">
+      <div class="panel-info">
+        <h3 id="titulo-lateral-izq">How to use it</h3>
+        <p id="texto-lateral-izq">
+        </p>
+      </div>
+
+      <div class="panel-central">
+        <h3 id="aviso-app">If something breaks, I am not responsible :)</h3>
+        <p id="instrucciones-app" class="texto-instrucciones">
+        </p>
+
+        <textarea
+          id="cartas"
+          rows="10"
+          placeholder=""
+        >1 Giada, Font of Hope (FDN) 141&#10;1 Akroma's Will (M3C) 165&#10;1 Angel of Destiny (PZNR) 2p *F*</textarea>
+
+        <button id="boton-busqueda" class="boton-principal" onclick="buscarimg()">
+          Search and download
+        </button>
+      </div>
+
+      <div class="panel-info">
+        <h3 id="titulo-lateral-der">Notes</h3>
+        <p id="texto-lateral-der">
+          In English it searches by set and collector number. In Spanish it uses the improved search and image fallback.
+        </p>
+      </div>
+    </section>
+
     <div id="zonaboton"></div>
-    <div id="divprogreso"><progress id="progreso" max="0" value="0"></progress>
-        <p id="estado">Esperando descarga...</p>
+
+    <div id="divprogreso" class="">
+      <progress id="progreso" max="0" value="0"></progress>
+      <p id="estado">Waiting...</p>
     </div>
 
     <div id="error"></div>
     <div id="num_cartas"></div>
 
     <div id="resultado"></div>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="script.js"></script>
 </body>
-
-<!-- scripts para zip y download -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-<script src="script.js"></script>
-
 
 </html>
