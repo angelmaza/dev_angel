@@ -2,7 +2,7 @@
   --fondo: #161419;
   --fondo-2: #211c24;
   --panel: #2b2330;
-  --panel-2: #332938;
+  --panel-2: #3f3444;
   --texto: #efe6d7;
   --texto-suave: #cbbda8;
   --acento: #9b5035;
@@ -25,7 +25,7 @@ html {
 body {
   font-family: "Courier New", monospace;
   background:
-    radial-gradient(circle at top, rgba(111, 143, 114, 0.08), transparent 30%),
+    radial-gradient(circle at top, rgba(200, 225, 221, 0.14), transparent 30%),
     linear-gradient(180deg, var(--fondo-2), var(--fondo));
   color: var(--texto);
   min-height: 100vh;

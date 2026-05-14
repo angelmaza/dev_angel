@@ -4,9 +4,9 @@
   --panel: #333;
   --texto: #ffffff;
   --texto-suave: #d6d6d6;
-  --acento: orange;
-  --acento-2: #ff9800;
-  --acento-3: #ff5722;
+  --color: orange;
+  --color-2: #ff9800;
+  --color-3: #ff5722;
   --error: rgb(255, 65, 65);
   --sombra: rgba(255, 165, 0, 0.18);
 }
@@ -45,7 +45,7 @@ body {
 #titulo-app {
   margin: 0 0 8px;
   font-size: clamp(2rem, 4vw, 3rem);
-  color: var(--acento);
+  color: var(--color);
 }
 
 .barra-idioma {
@@ -54,7 +54,7 @@ body {
   background-color: var(--fondo-2);
   padding: 6px;
   border-radius: 999px;
-  border: 2px solid var(--acento);
+  border: 2px solid var(--color);
 }
 
 .boton-idioma {
@@ -76,7 +76,7 @@ body {
 }
 
 .boton-idioma.activo {
-  background-color: var(--acento);
+  background-color: var(--color);
   color: black;
 }
 
@@ -99,7 +99,7 @@ body {
 .panel-central h3 {
   margin-top: 0;
   margin-bottom: 12px;
-  color: var(--acento);
+  color: var(--color);
 }
 
 .panel-info p,
@@ -120,7 +120,7 @@ body {
   min-height: 220px;
   padding: 12px;
   margin-top: 8px;
-  border: 2px solid var(--acento);
+  border: 2px solid var(--color);
   border-radius: 8px;
   background-color: var(--panel);
   color: white;
@@ -131,7 +131,7 @@ body {
 
 #cartas:focus {
   outline: none;
-  border-color: var(--acento-2);
+  border-color: var(--color-2);
 }
 
 .boton-principal,
@@ -143,7 +143,7 @@ body {
   margin-top: 14px;
   border: none;
   border-radius: 8px;
-  background-color: var(--acento);
+  background-color: var(--color);
   color: black;
   font-weight: bold;
   cursor: pointer;
@@ -151,11 +151,11 @@ body {
 }
 
 .boton-principal:hover {
-  background-color: var(--acento-2);
+  background-color: var(--color-2);
 }
 
 .boton-descarga {
-  background-color: var(--acento-3);
+  background-color: var(--color-3);
   color: white;
 }
 

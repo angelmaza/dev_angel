@@ -8,7 +8,7 @@ const textos = {
   en: {
     titulo: "MTG PNG Downloader",
     aviso: "If something breaks, I am not responsible :)",
-    instrucciones: "Paste Moxfield list. If sideboard is included, it will be downloaded.",
+    instrucciones: "Decklist:",
     botonBuscar: "Search and download",
     botonDescargar: "Download all cards",
     lateralIzqTitulo: "How to use it",
@@ -27,7 +27,7 @@ const textos = {
   },
   es: {
     titulo: "Descargador PNG MTG",
-    aviso: "Si algo malo pasa, no me hago responsable :)",
+    aviso: "Decklist:",
     instrucciones: "Pegad lista de moxfield. Si dejas sideboard también lo descarga.",
     botonBuscar: "Búsqueda descargar",
     botonDescargar: "Descargar todas (máxima calidad)",
