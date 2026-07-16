@@ -11,18 +11,6 @@
   --sombra: rgba(255, 165, 0, 0.18);
 }
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--fondo);
-  color: var(--texto);
-  font-family: Arial, sans-serif;
-}
-
 .pagina-descarga {
   width: min(1400px, calc(100% - 2rem));
   margin: 0 auto;

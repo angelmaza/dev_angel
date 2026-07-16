@@ -12,28 +12,6 @@
   --sombra: rgba(0, 0, 0, 0.35);
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: "Courier New", monospace;
-  background:
-    radial-gradient(circle at top, rgba(200, 225, 221, 0.14), transparent 30%),
-    linear-gradient(180deg, var(--fondo-2), var(--fondo));
-  color: var(--texto);
-  min-height: 100vh;
-  line-height: 1.4;
-  position: relative;
-  overflow-x: hidden;
-}
-
 .ruido {
   position: fixed;
   inset: 0;
