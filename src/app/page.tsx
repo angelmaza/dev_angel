@@ -58,14 +58,14 @@ export default function Home() {
               </p>
             </a>
 
-            <a className="tarjeta-proyecto borde-pixel" href="/Mi_tele" target="_blank" rel="noopener noreferrer">
+            <a className="tarjeta-proyecto borde-pixel" href="/Mi_cultura" target="_blank" rel="noopener noreferrer">
               <div className="cabecera-tarjeta">
                 <span className="etiqueta-proyecto">[ 02 ]</span>
                 <span className="tipo-proyecto">WEB</span>
               </div>
-              <h3>Mi_tele</h3>
+              <h3>Mi_cultura</h3>
               <p>
-                Rancking CRUD
+                Ranking CRUD
               </p>
             </a>
 
@@ -145,7 +145,7 @@ export default function Home() {
       </main>
 
       <footer className="pie">
-        <p id="texto-pie">© <span id="anio">{new Date().getFullYear()}</span> Ángel Mazarías Salgado</p>
+        <p id="texto-pie">© <span id="anio">{new Date().getFullYear()}</span> Ángel Mazarías Salgado.</p>
       </footer>
     </>
   );
