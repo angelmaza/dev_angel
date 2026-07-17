@@ -134,6 +134,7 @@ export default function Home() {
             <div className="etiquetas-sobre-mi">
               <span>Ingles</span>
               <span>Blazor</span>
+              <span>SQL</span>
               <span>PHP</span>
               <span>JavaScript</span>
               <span>React</span>
