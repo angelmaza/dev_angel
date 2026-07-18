@@ -30,7 +30,7 @@ export interface RecommendationItem {
 const mockContent: ContentItem[] = [
   {
     id: 1,
-    type: "pelicula",
+    type: "pelicula test",
     title: "Inception",
     description: "Un ladrón que roba secretos corporativos a través del uso de la tecnología de compartir sueños, se le da la tarea inversa de plantar una idea en la mente de un CEO.",
     poster_url: null,
@@ -41,52 +41,12 @@ const mockContent: ContentItem[] = [
   {
     id: 2,
     type: "serie",
-    title: "Breaking Bad",
+    title: "Breaking test",
     description: "Un profesor de química de secundaria diagnosticado con cáncer de pulmón inoperable se asocia con un exalumno para asegurar el futuro de su familia fabricando y vendiendo metanfetamina.",
     poster_url: null,
     status: "vista",
     rating: 10,
     notes: "La mejor serie de la historia. El desarrollo de Walter White es inigualable."
-  },
-  {
-    id: 3,
-    type: "anime",
-    title: "Shingeki no Kyojin",
-    description: "Después de que su ciudad natal es destruida y su madre es asesinada, el joven Eren Jaeger se compromete a limpiar la Tierra de los gigantescos Titanes humanoides que han llevado a la humanidad al borde de la extinción.",
-    poster_url: null,
-    status: "en emision",
-    rating: 9,
-    notes: "Giros argumentales increíbles."
-  },
-  {
-    id: 4,
-    type: "libro",
-    title: "Cien años de soledad",
-    description: "La novela narra la historia de la familia Buendía a lo largo de siete generaciones en el pueblo ficticio de Macondo.",
-    poster_url: null,
-    status: "pendiente",
-    rating: 8,
-    notes: "Tengo pendiente terminarlo, pero el estilo de García Márquez es pura magia."
-  },
-  {
-    id: 5,
-    type: "pelicula",
-    title: "Interstellar",
-    description: "Un equipo de exploradores viaja a través de un agujero de gusano en el espacio en un intento por asegurar la supervivencia de la humanidad.",
-    poster_url: null,
-    status: "vista",
-    rating: 10,
-    notes: "Visualmente perfecta y muy emotiva."
-  },
-  {
-    id: 6,
-    type: "anime",
-    title: "Monster",
-    description: "Un brillante neurocirujano japonés se ve envuelto en una red de misterio y asesinatos tras salvar la vida de un niño que resulta ser un psicópata carismático.",
-    poster_url: null,
-    status: "abandonada",
-    rating: 7,
-    notes: "Lenta al principio, tal vez le dé otra oportunidad."
   }
 ];
 
@@ -94,29 +54,35 @@ const mockRecommendations: RecommendationItem[] = [
   {
     id: 1,
     content_type: "pelicula",
-    content_title: "The Prestige",
+    content_title: "The Prestige tes",
     comment: "Te encantará si te gustó Inception. Es del mismo director."
-  },
-  {
-    id: 2,
-    content_type: "serie",
-    content_title: "Better Call Saul",
-    comment: "Spin-off a la altura de Breaking Bad."
   }
 ];
 
+function getTypeAliases(type: string): string[] {
+  const t = type.toLowerCase().trim();
+  if (t === "serie" || t === "series") return ["serie", "series"];
+  if (t === "pelicula" || t === "peliculas" || t === "película" || t === "películas") {
+    return ["pelicula", "peliculas", "película", "películas"];
+  }
+  if (t === "anime" || t === "animes") return ["anime", "animes"];
+  if (t === "libro" || t === "libros") return ["libro", "libros"];
+  return [t];
+}
+
 export async function fetchContentByType(type: string): Promise<ContentItem[]> {
+  const aliases = getTypeAliases(type);
   if (sqlClient) {
     try {
-      const result = await sqlClient`SELECT * FROM content WHERE LOWER(type) = LOWER(${type}) ORDER BY rating DESC, title ASC`;
+      const result = await sqlClient`SELECT * FROM content WHERE LOWER(type) = ANY(${aliases}) ORDER BY rating DESC, title ASC`;
       return result as unknown as ContentItem[];
     } catch (e) {
       console.error("Error fetching content from Neon, returning mock data:", e);
-      return mockContent.filter(item => item.type.toLowerCase() === type.toLowerCase());
+      return mockContent.filter(item => aliases.includes(item.type.toLowerCase()));
     }
   } else {
     // Return Mock Data if no connection string is provided
-    return mockContent.filter(item => item.type.toLowerCase() === type.toLowerCase());
+    return mockContent.filter(item => aliases.includes(item.type.toLowerCase()));
   }
 }
 

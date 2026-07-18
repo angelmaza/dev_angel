@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { ContentItem, RecommendationItem } from "@/lib/db";
 import {
   getCultureContent,
@@ -12,8 +11,8 @@ import "./cultura.css";
 
 const TABS = [
   { id: "pelicula", label: "Películas" },
-  { id: "serie", label: "Series" },
-  { id: "anime", label: "Anime" },
+  { id: "serie", label: "serie" },
+  { id: "anime", label: "anime" },
   { id: "libro", label: "Libros" }
 ];
 
@@ -118,9 +117,6 @@ export default function MiCultura() {
               <span>Mantecón de ocio y cultura</span>
             </h1>
           </div>
-          <Link href="/" className="back-btn">
-            ← Volver al Portfolio
-          </Link>
         </header>
 
         {/* Layout */}
@@ -197,7 +193,6 @@ export default function MiCultura() {
                       <span className="rec-title">{rec.content_title}</span>
                       <span className="rec-type">{rec.content_type}</span>
                     </div>
-                    <p className="rec-comment">"{rec.comment}"</p>
                   </div>
                 ))
               )}

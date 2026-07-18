@@ -23,7 +23,7 @@ body.cultura-body {
 }
 
 .cultura-container {
-  width: min(1300px, calc(100% - 2rem));
+  width: 95%;
   margin: 0 auto;
   padding: 2rem 0;
 }
@@ -51,28 +51,10 @@ body.cultura-body {
   letter-spacing: 2px;
 }
 
-.back-btn {
-  text-decoration: none;
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
-  padding: 0.5rem 1rem;
-  background-color: var(--bg-dark);
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  box-shadow: 3px 3px 0 #000;
-  transition: all 0.2s ease;
-}
-
-.back-btn:hover {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0 #000;
-  border-color: var(--accent-gold);
-}
-
 /* Layout columns */
 .cultura-layout {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 3.5fr 1fr;
   gap: 2rem;
 }
 
@@ -119,10 +101,10 @@ body.cultura-body {
   font-weight: bold;
 }
 
-/* Content List */
+/* Content List (Multiple cards per row) */
 .list-wrapper {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 0.6rem;
 }
 
@@ -142,13 +124,14 @@ body.cultura-body {
 .cultura-item-row:hover {
   background-color: var(--bg-card-hover);
   border-color: var(--accent-gold);
-  transform: translateX(4px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .item-left {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -169,7 +152,7 @@ body.cultura-body {
 }
 
 .item-title {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: bold;
   color: var(--text-main);
 }
@@ -177,13 +160,13 @@ body.cultura-body {
 .item-right {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
 /* Badges for status */
 .status-badge {
-  font-size: 0.75rem;
-  padding: 0.2rem 0.6rem;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 3px;
   text-transform: uppercase;
   font-weight: bold;
@@ -281,13 +264,6 @@ body.cultura-body {
   font-size: 0.7rem;
   text-transform: uppercase;
   color: var(--accent-blue);
-}
-
-.rec-comment {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.4;
-  font-style: italic;
 }
 
 /* Form */

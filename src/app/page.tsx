@@ -65,7 +65,7 @@ export default function Home() {
               </div>
               <h3>Mi_cultura</h3>
               <p>
-                Ranking CRUD
+                Espacio personal con mi listado de películas, series, anime y libros preferidos. Incluye un panel interactivo para sugerencias públicas.
               </p>
             </a>
 
@@ -91,14 +91,14 @@ export default function Home() {
               </p>
             </a>
 
-            <a className="tarjeta-proyecto borde-pixel" href="#" target="_blank" rel="noopener noreferrer">
+            <a className="tarjeta-proyecto borde-pixel" href="/cv" target="_blank" rel="noopener noreferrer">
               <div className="cabecera-tarjeta">
                 <span className="etiqueta-proyecto">[ 03 ]</span>
                 <span className="tipo-proyecto">CV</span>
               </div>
               <h3>Curriculum Vitae</h3>
               <p>
-                Curriculum Vitae
+                Mi trayectoria profesional y académica detallada. Experiencia en desarrollo .NET, gestión de proyectos y soporte técnico.
               </p>
             </a>
 
@@ -123,23 +123,23 @@ export default function Home() {
 
           <div className="tarjeta-sobre-mi borde-pixel">
             <p>
-              Hola, soy <strong>Tu Nombre</strong>. Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
-              Recusandae magni amet natus explicabo quis molestiae accusantium quae, est soluta doloribus aliquid ducimus assumenda tempore eaque corrupti reiciendis aut rerum accusamus!
+              Hola, soy <strong>Ángel Mazarías Salgado</strong>. Desarrollador de Software con una sólida base técnica en el ecosistema .NET (C#, Blazor) y bases de datos relacionales como SQL Server. Actualmente trabajo en soporte de desarrollo para sistemas logísticos de alta criticidad, gestionando control de versiones mediante Git y SourceTree.
             </p>
 
             <p>
-              Recusandae magni amet natus explicabo quis molestiae accusantium quae, est soluta doloribus aliquid ducimus assumenda tempore eaque corrupti reiciendis aut rerum accusamus!
+              Cuento con más de 5 años de experiencia previa en la gestión de proyectos multifuncionales, lo que me ha aportado una mentalidad analítica, gran adaptabilidad y una excelente capacidad para resolver incidencias técnicas complejas bajo presión. Además, integro herramientas de Inteligencia Artificial de vanguardia para optimizar mis flujos de trabajo de desarrollo y agilizar la resolución de problemas.
             </p>
 
             <div className="etiquetas-sobre-mi">
-              <span>Ingles</span>
+              <span>Inglés (B2)</span>
+              <span>C# .NET</span>
               <span>Blazor</span>
-              <span>SQL</span>
+              <span>SQL Server</span>
               <span>PHP</span>
               <span>JavaScript</span>
-              <span>React</span>
+              <span>Python</span>
               <span>GIT</span>
-              <span>CSS</span>
+              <span>Herramientas IA</span>
             </div>
           </div>
         </section>
