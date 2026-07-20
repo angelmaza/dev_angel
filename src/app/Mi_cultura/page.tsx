@@ -109,7 +109,6 @@ export default function MiCultura() {
     <div className="cultura-body min-h-screen">
       <div className="cultura-container">
         
-        {/* Header */}
         <header className="cultura-header">
           <div className="cultura-title-wrapper">
             <h1 className="cultura-title">
@@ -119,10 +118,7 @@ export default function MiCultura() {
           </div>
         </header>
 
-        {/* Layout */}
         <div className="cultura-layout">
-          
-          {/* Main Content Side */}
           <main className="content-side">
             
             {/* Tabs */}
@@ -138,7 +134,7 @@ export default function MiCultura() {
               ))}
             </nav>
 
-            {/* List */}
+            {/* Listado */}
             <div className="list-container">
               {loadingContent ? (
                 <div style={{ textAlign: "center", padding: "2rem", color: "var(--text-muted)" }}>
@@ -173,14 +169,12 @@ export default function MiCultura() {
             </div>
           </main>
 
-          {/* Recommendations Side */}
           <aside className="recommendations-panel">
             <h2 className="panel-title">
               Recomendaciones
               <span>{recommendations.length} / 10</span>
             </h2>
 
-            {/* Recommendations List */}
             <div className="rec-list">
               {recommendations.length === 0 ? (
                 <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontStyle: "italic", textAlign: "center", padding: "1rem" }}>
@@ -198,7 +192,6 @@ export default function MiCultura() {
               )}
             </div>
 
-            {/* Add Recommendation Form */}
             <form className="rec-form" onSubmit={handleAddRecommendation}>
               <h3 style={{ fontSize: "1rem", color: "var(--accent-gold)", textTransform: "uppercase", marginBottom: "0.4rem" }}>
                 Recomiéndame algo
@@ -262,7 +255,6 @@ export default function MiCultura() {
 
         </div>
 
-        {/* Modal Detail view */}
         {selectedItem && (
           <div className="modal-overlay" onClick={() => setSelectedItem(null)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>

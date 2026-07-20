@@ -7,12 +7,12 @@ export default function CVPage() {
     <div className="cv-body min-h-screen">
       <div className="cv-container">
         
-        {/* Back Link */}
+        {/* 
         <Link href="/" className="cv-back-link">
           <span>←</span> Volver al Portfolio
-        </Link>
+        </Link>*/}
 
-        {/* Header Section */}
+        {/* Header */}
         <header className="cv-header">
           <h1 className="cv-name">ÁNGEL MAZARÍAS SALGADO</h1>
           <p className="cv-title">Desarrollador de Software</p>
@@ -33,13 +33,8 @@ export default function CVPage() {
           </div>
         </header>
 
-        {/* Two-Column Grid */}
         <div className="cv-grid">
-          
-          {/* Left Column (Sidebar) */}
           <aside className="cv-sidebar">
-            
-            {/* Perfil Profesional */}
             <section>
               <h2 className="cv-section-title">Perfil Profesional</h2>
                 <p className="cv-profile-text">
@@ -51,7 +46,6 @@ export default function CVPage() {
                 <p className="cv-profile-text"> Por último, se integrar herramientas de Inteligencia Artificial para optimizar mis flujos de trabajo.</p>
             </section>
 
-            {/* Habilidades Técnicas */}
             <section>
               <h2 className="cv-section-title">Habilidades Técnicas</h2>
               <div className="cv-skills-group">
@@ -91,7 +85,6 @@ export default function CVPage() {
               </div>
             </section>
 
-            {/* Idiomas y Otros Datos */}
             <section>
               <h2 className="cv-section-title">Idiomas y Otros</h2>
               <div className="cv-languages-list">
@@ -109,15 +102,10 @@ export default function CVPage() {
 
           </aside>
 
-          {/* Right Column (Main Content) */}
           <main className="cv-main">
-            
-            {/* Experiencia Laboral */}
             <section>
               <h2 className="cv-section-title">Experiencia Laboral</h2>
               <div className="cv-timeline">
-                
-                {/* ICP Logística */}
                 <div className="cv-timeline-item">
                   <span className="cv-timeline-marker"></span>
                   <div className="cv-timeline-header">
@@ -135,7 +123,6 @@ export default function CVPage() {
                   </ul>
                 </div>
 
-                {/* Team Queso */}
                 <div className="cv-timeline-item">
                   <span className="cv-timeline-marker"></span>
                   <div className="cv-timeline-header">
@@ -152,7 +139,6 @@ export default function CVPage() {
                   </ul>
                 </div>
 
-                {/* Nikai Systems */}
                 <div className="cv-timeline-item">
                   <span className="cv-timeline-marker"></span>
                   <div className="cv-timeline-header">
@@ -164,7 +150,6 @@ export default function CVPage() {
                   </div>
                 </div>
 
-                {/* Scout Apícula */}
                 <div className="cv-timeline-item">
                   <span className="cv-timeline-marker"></span>
                   <div className="cv-timeline-header">
@@ -182,7 +167,6 @@ export default function CVPage() {
               </div>
             </section>
 
-            {/* Formación Académica */}
             <section>
               <h2 className="cv-section-title">Formación Académica</h2>
               <div className="cv-education-grid">

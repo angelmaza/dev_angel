@@ -65,24 +65,25 @@ export default function Home() {
               </div>
               <h3>Mi Archivo</h3>
               <p>
-                Espacio personal con mi listado de películas, series, anime y libros preferidos. Incluye un panel interactivo para sugerencias públicas.
+                App CRUD con mi listado de películas, series, anime y libros que he visto. Incluye un panel de sugerencias.
               </p>
             </a>
 
-            <a className="tarjeta-proyecto borde-pixel" href="/Vane" target="_blank" rel="noopener noreferrer">
+            <a className="tarjeta-proyecto borde-pixel" href="https://1natural.es/" target="_blank" rel="noopener noreferrer">
               <div className="cabecera-tarjeta">
-                <span className="etiqueta-proyecto">[ 02 ]</span>
+                <span className="etiqueta-proyecto">[ 03 ]</span>
                 <span className="tipo-proyecto">WEB</span>
               </div>
-              <h3>Shop Landing Page</h3>
+              <h3>1Natural</h3>
               <p>
-                Landing page simple para un comercio local. En proceso
+                Aplicación de uso personal para jugar con Amigos. El código se encuentra en Github.
               </p>
             </a>
+
 
             <a className="tarjeta-proyecto borde-pixel" href="/cv" target="_blank" rel="noopener noreferrer">
               <div className="cabecera-tarjeta">
-                <span className="etiqueta-proyecto">[ 03 ]</span>
+                <span className="etiqueta-proyecto">[ 04 ]</span>
                 <span className="tipo-proyecto">CV</span>
               </div>
               <h3>Curriculum Vitae</h3>
@@ -93,12 +94,23 @@ export default function Home() {
 
             <a className="tarjeta-proyecto borde-pixel" href="https://github.com/angelmaza/Proyecto_Logistico" target="_blank" rel="noopener noreferrer">
               <div className="cabecera-tarjeta">
-                <span className="etiqueta-proyecto">[ 04 ]</span>
+                <span className="etiqueta-proyecto">[ 05 ]</span>
                 <span className="tipo-proyecto">CODE</span>
               </div>
               <h3>Proyecto Logístico</h3>
               <p>
                 Aplicación que simula una logística. Recepciones, salida pedidos, stock, referencias...
+              </p>
+            </a>
+
+            <a className="tarjeta-proyecto borde-pixel" href="/Vane" target="_blank" rel="noopener noreferrer">
+              <div className="cabecera-tarjeta">
+                <span className="etiqueta-proyecto">[ 06 ]</span>
+                <span className="tipo-proyecto">WEB</span>
+              </div>
+              <h3>Shop Landing Page</h3>
+              <p>
+                Landing page simple para un comercio local. En proceso
               </p>
             </a>
           </div>
