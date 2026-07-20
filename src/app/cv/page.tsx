@@ -42,16 +42,13 @@ export default function CVPage() {
             {/* Perfil Profesional */}
             <section>
               <h2 className="cv-section-title">Perfil Profesional</h2>
-              <p className="cv-profile-text">
-                Desarrollador de Software con experiencia sólida en el ecosistema .NET (C#, Blazor) 
-                y gestión de bases de datos (SQL Server). Actualmente formo parte del equipo de 
-                soporte de desarrollo en ICP Logística, donde mantengo y mejoro sistemas logísticos 
-                críticos utilizando Git y SourceTree para el control de versiones. Aporto una 
-                trayectoria previa de más de 5 años como gestor de proyectos multifuncionales, lo 
-                que me ha dotado de una excelente capacidad analítica, visión de negocio, habilidad 
-                para la resolución de problemas bajo presión y un enfoque firme en el cumplimiento 
-                de objetivos corporativos.
-              </p>
+                <p className="cv-profile-text">
+                Desarrollador de Software con experiencia en .NET (C#, Blazor) 
+                y gestión de bases de datos (SQL Server). Actualmente formo parte de un equipo de 
+                soporte de desarrollo, donde mantengo y mejoro sistemas logísticos. 
+                </p>
+                <p className="cv-profile-text">Aporto además más de 5 años de experiencia en gestión de proyectos, con visión de negocio, capacidad analítica y resolución de problemas.. </p>
+                <p className="cv-profile-text"> Por último, se integrar herramientas de Inteligencia Artificial para optimizar mis flujos de trabajo.</p>
             </section>
 
             {/* Habilidades Técnicas */}
@@ -87,6 +84,7 @@ export default function CVPage() {
                     <span className="cv-tag">Git</span>
                     <span className="cv-tag">SourceTree</span>
                     <span className="cv-tag">GitHub</span>
+                    <span className="cv-tag">DevOps</span>
                     <span className="cv-tag">VS Code / VS</span>
                   </div>
                 </div>
@@ -174,7 +172,7 @@ export default function CVPage() {
                       <h3 className="cv-job-title">Coordinador y Monitor</h3>
                       <span className="cv-job-company">Grupo Scout Apícula</span>
                     </div>
-                    <span className="cv-job-date">2011 – 2017</span>
+                    <span className="cv-job-date">Sep 2011 – Sep 2017</span>
                   </div>
                   <ul className="cv-job-bullets">
                     <li>Organización logística de eventos, liderazgo de grupos y desarrollo de dinámicas enfocadas en el trabajo en equipo y la resolución de problemas.</li>
@@ -192,7 +190,7 @@ export default function CVPage() {
                 <div className="cv-education-item">
                   <h3 className="cv-education-degree">Grado Superior en Desarrollo de Aplicaciones Web (DAW)</h3>
                   <div className="cv-education-school">
-                    IES Arcipreste de Hita, Azuqueca de Henares <span>2023 – Actualidad</span>
+                    IES Arcipreste de Hita, Azuqueca de Henares <span>2023 – 2025</span>
                   </div>
                 </div>
 

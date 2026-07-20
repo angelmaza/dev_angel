@@ -63,7 +63,7 @@ export default function Home() {
                 <span className="etiqueta-proyecto">[ 02 ]</span>
                 <span className="tipo-proyecto">WEB</span>
               </div>
-              <h3>Mi_cultura</h3>
+              <h3>Mi Archivo</h3>
               <p>
                 Espacio personal con mi listado de películas, series, anime y libros preferidos. Incluye un panel interactivo para sugerencias públicas.
               </p>
@@ -74,20 +74,9 @@ export default function Home() {
                 <span className="etiqueta-proyecto">[ 02 ]</span>
                 <span className="tipo-proyecto">WEB</span>
               </div>
-              <h3>lorem</h3>
-              <p>
-                lorem.
-              </p>
-            </a>
-
-            <a className="tarjeta-proyecto borde-pixel" href="/Vane" target="_blank" rel="noopener noreferrer">
-              <div className="cabecera-tarjeta">
-                <span className="etiqueta-proyecto">[ 02 ]</span>
-                <span className="tipo-proyecto">WEB</span>
-              </div>
               <h3>Shop Landing Page</h3>
               <p>
-                Landing page simple para un comercio local.
+                Landing page simple para un comercio local. En proceso
               </p>
             </a>
 
@@ -98,11 +87,11 @@ export default function Home() {
               </div>
               <h3>Curriculum Vitae</h3>
               <p>
-                Mi trayectoria profesional y académica detallada. Experiencia en desarrollo .NET, gestión de proyectos y soporte técnico.
+                Mi trayectoria profesional y académica detallada. 
               </p>
             </a>
 
-            <a className="tarjeta-proyecto borde-pixel" href="#" target="_blank" rel="noopener noreferrer">
+            <a className="tarjeta-proyecto borde-pixel" href="https://github.com/angelmaza/Proyecto_Logistico" target="_blank" rel="noopener noreferrer">
               <div className="cabecera-tarjeta">
                 <span className="etiqueta-proyecto">[ 04 ]</span>
                 <span className="tipo-proyecto">CODE</span>
@@ -123,11 +112,11 @@ export default function Home() {
 
           <div className="tarjeta-sobre-mi borde-pixel">
             <p>
-              Hola, soy <strong>Ángel Mazarías Salgado</strong>. Desarrollador de Software con una sólida base técnica en el ecosistema .NET (C#, Blazor) y bases de datos relacionales como SQL Server. Actualmente trabajo en soporte de desarrollo para sistemas logísticos de alta criticidad, gestionando control de versiones mediante Git y SourceTree.
+              Hola, soy <strong>Ángel Mazarías Salgado</strong>. Desarrollador de Software con una base técnica en el ecosistema .NET (C#, Blazor) y bases de datos relacionales. Actualmente trabajo en soporte de desarrollo para sistemas logísticos, gestionando incidencias en el Software.
             </p>
 
             <p>
-              Cuento con más de 5 años de experiencia previa en la gestión de proyectos multifuncionales, lo que me ha aportado una mentalidad analítica, gran adaptabilidad y una excelente capacidad para resolver incidencias técnicas complejas bajo presión. Además, integro herramientas de Inteligencia Artificial de vanguardia para optimizar mis flujos de trabajo de desarrollo y agilizar la resolución de problemas.
+              Cuento con más de 5 años de experiencia previa en la gestión de proyectos multifuncionales, lo que me ha aportado una mentalidad analítica, adaptabilidad y capacidad para resolutiva bajo presión. 
             </p>
 
             <div className="etiquetas-sobre-mi">

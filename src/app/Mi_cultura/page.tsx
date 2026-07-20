@@ -113,8 +113,8 @@ export default function MiCultura() {
         <header className="cultura-header">
           <div className="cultura-title-wrapper">
             <h1 className="cultura-title">
-              Mi_cultura
-              <span>Mantecón de ocio y cultura</span>
+              Mi Archivo
+              <span>Incompleta = Faltan temporadas | Sin Terminar = No me la he visto entera</span>
             </h1>
           </div>
         </header>
