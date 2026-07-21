@@ -18,18 +18,19 @@ export default function CVPage() {
           <p className="cv-title">Desarrollador de Software</p>
           
           <div className="cv-meta-grid">
-            <div className="cv-meta-item">
+          {/*  <div className="cv-meta-item">
               <span>📍</span> Madrid, España
-            </div>
+            </div>>
+               <div className="cv-meta-item">
+              <span>📅</span> 13/09/1994
+            </div>*/}
             <div className="cv-meta-item">
               <span>📞</span> 659 750 262
             </div>
             <div className="cv-meta-item">
               <span>✉️</span> angel.mazarias.salgado@gmail.com
             </div>
-            <div className="cv-meta-item">
-              <span>📅</span> 13/09/1994
-            </div>
+         
           </div>
         </header>
 
@@ -38,8 +39,8 @@ export default function CVPage() {
             <section>
               <h2 className="cv-section-title">Perfil Profesional</h2>
                 <p className="cv-profile-text">
-                Desarrollador de Software con experiencia en .NET (C#, Blazor) 
-                y gestión de bases de datos (SQL Server). Actualmente formo parte de un equipo de 
+                Desarrollador de Software con experiencia en distintos lenguajes de programación
+                y gestión de bases de datos. Actualmente formo parte de un equipo de 
                 soporte de desarrollo, donde mantengo y mejoro sistemas logísticos. 
                 </p>
                 <p className="cv-profile-text">Aporto además más de 5 años de experiencia en gestión de proyectos, con visión de negocio, capacidad analítica y resolución de problemas.. </p>

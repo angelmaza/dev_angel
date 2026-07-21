@@ -47,7 +47,7 @@ export default function Home() {
           </div>
 
           <div className="rejilla-proyectos">
-            <a className="tarjeta-proyecto borde-pixel" href="/Mtg_Download/Descargador__pngs_eng" target="_blank" rel="noopener noreferrer">
+            <a className="tarjeta-proyecto borde-pixel" href="/Mtg_Download" target="_blank" rel="noopener noreferrer">
               <div className="cabecera-tarjeta">
                 <span className="etiqueta-proyecto">[ 01 ]</span>
                 <span className="tipo-proyecto">APP</span>

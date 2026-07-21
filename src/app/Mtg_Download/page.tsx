@@ -93,7 +93,7 @@ function pickBestImage(image_uris: any) {
 }
 
 export default function DescargadorPngsMtg() {
-  const [lang, setLang] = useState<"en" | "es">("en");
+  const [lang, setLang] = useState<"es" | "en">("es");
   const [cartasText, setCartasText] = useState<string>(
     "1 Giada, Font of Hope (FDN) 141\n1 Akroma's Will (M3C) 165\n1 Angel of Destiny (PZNR) 2p *F*"
   );
