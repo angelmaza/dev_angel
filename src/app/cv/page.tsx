@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import "./cv.css";
 
-export default function CVPage() {
+export default function PaginaCV() {
   return (
     <div className="cv-body min-h-screen">
       <div className="cv-container">
@@ -12,7 +12,7 @@ export default function CVPage() {
           <span>←</span> Volver al Portfolio
         </Link>*/}
 
-        {/* Header */}
+        {/* Cabecera */}
         <header className="cv-header">
           <h1 className="cv-name">ÁNGEL MAZARÍAS SALGADO</h1>
           <p className="cv-title">Desarrollador de Software</p>

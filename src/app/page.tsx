@@ -3,18 +3,18 @@
 import React, { useEffect } from "react";
 import "./landing.css";
 
-export default function Home() {
+export default function Inicio() {
   useEffect(() => {
     const tarjetasProyecto = document.querySelectorAll(".tarjeta-proyecto");
 
     tarjetasProyecto.forEach((tarjeta) => {
-      const el = tarjeta as HTMLElement;
-      el.addEventListener("mouseenter", () => {
-        el.style.filter = "brightness(1.05)";
+      const elemento = tarjeta as HTMLElement;
+      elemento.addEventListener("mouseenter", () => {
+        elemento.style.filter = "brightness(1.05)";
       });
 
-      el.addEventListener("mouseleave", () => {
-        el.style.filter = "brightness(1)";
+      elemento.addEventListener("mouseleave", () => {
+        elemento.style.filter = "brightness(1)";
       });
     });
   }, []);

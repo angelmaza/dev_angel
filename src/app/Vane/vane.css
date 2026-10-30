@@ -3,18 +3,18 @@
 :root {
   --color-negro: rgb(12, 12, 12);
   --color-blanco: rgb(246, 241, 241);
-  --color-negro-soft: #1a1a1a;
-  --color-blanco-soft: #e2e2e2;
-  --font-serif-title: "Abril Fatface", serif;
-  --font-serif-body: "Prata", serif;
+  --color-negro-suave: #1a1a1a;
+  --color-blanco-suave: #e2e2e2;
+  --fuente-serif-titulo: "Abril Fatface", serif;
+  --fuente-serif-cuerpo: "Prata", serif;
   --font-sans: "Montserrat", sans-serif;
-  --color-accent: #c29b62; /* Chic subtle gold accent */
-  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --color-dorado: #c29b62; /* Chic subtle gold accent */
+  --transicion: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 body.vane-body {
   margin: 0;
-  font-family: var(--font-serif-body);
+  font-family: var(--fuente-serif-cuerpo);
   background-color: #ededed;
   color: var(--color-negro);
 }
@@ -32,7 +32,7 @@ body.vane-body {
 }
 
 .seccionhead h1 {
-  font-family: var(--font-serif-title);
+  font-family: var(--fuente-serif-titulo);
   font-size: clamp(6rem, 15vw, 12rem);
   font-weight: bold;
   mix-blend-mode: difference;
@@ -55,7 +55,7 @@ body.vane-body {
   justify-content: space-between;
   align-items: center;
   background-color: var(--color-blanco);
-  border-bottom: 1px solid var(--color-blanco-soft);
+  border-bottom: 1px solid var(--color-blanco-suave);
   position: fixed;
   top: 0;
   z-index: 100;
@@ -66,7 +66,7 @@ body.vane-body {
 }
 
 .nav-brand {
-  font-family: var(--font-serif-title);
+  font-family: var(--fuente-serif-titulo);
   font-size: 1.8rem;
   color: var(--color-negro);
   text-decoration: none;
@@ -86,7 +86,7 @@ body.vane-body {
   color: var(--color-negro); 
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  transition: var(--transition);
+  transition: var(--transicion);
   position: relative;
   padding-bottom: 4px;
 }
@@ -99,7 +99,7 @@ body.vane-body {
   width: 0;
   height: 1px;
   background-color: var(--color-negro);
-  transition: var(--transition);
+  transition: var(--transicion);
 }
 
 .navdiv a:hover::after {
@@ -213,7 +213,7 @@ body.vane-body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: var(--transition);
+  transition: var(--transicion);
 }
 
 .gridimg:hover .product-img {
@@ -230,7 +230,7 @@ body.vane-body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: var(--transition);
+  transition: var(--transicion);
   padding: 2rem;
   color: var(--color-blanco);
   text-align: center;
@@ -242,7 +242,7 @@ body.vane-body {
 }
 
 .product-overlay-title {
-  font-family: var(--font-serif-body);
+  font-family: var(--fuente-serif-cuerpo);
   font-size: 1.8rem;
   margin: 0;
 }
@@ -265,7 +265,7 @@ body.vane-body {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   cursor: pointer;
-  transition: var(--transition);
+  transition: var(--transicion);
   box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 }
 
@@ -278,7 +278,7 @@ body.vane-body {
   padding: 4rem;
   font-size: 1.8rem;
   line-height: 1.6;
-  font-family: var(--font-serif-body);
+  font-family: var(--fuente-serif-cuerpo);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -322,7 +322,7 @@ body.vane-body {
   font-size: 1.8rem;
   cursor: pointer;
   line-height: 1;
-  transition: var(--transition);
+  transition: var(--transicion);
 }
 
 .vane-modal-close:hover {
@@ -334,7 +334,7 @@ body.vane-body {
 }
 
 .vane-modal-title {
-  font-family: var(--font-serif-body);
+  font-family: var(--fuente-serif-cuerpo);
   font-size: 2rem;
   margin: 0 0 1rem;
   color: var(--color-negro);
@@ -343,7 +343,7 @@ body.vane-body {
 .vane-modal-subtitle {
   font-family: var(--font-sans);
   font-size: 0.85rem;
-  color: var(--color-accent);
+  color: var(--color-dorado);
   text-transform: uppercase;
   letter-spacing: 0.15em;
   margin-bottom: 2rem;
@@ -371,7 +371,7 @@ body.vane-body {
 
 .vane-input, .vane-select, .vane-textarea {
   background: none;
-  border: 1px solid var(--color-negro-soft);
+  border: 1px solid var(--color-negro-suave);
   color: var(--color-negro);
   padding: 0.8rem;
   font-family: var(--font-sans);
@@ -382,7 +382,7 @@ body.vane-body {
 
 .vane-input:focus, .vane-select:focus, .vane-textarea:focus {
   outline: none;
-  border-color: var(--color-accent);
+  border-color: var(--color-dorado);
 }
 
 .vane-textarea {
@@ -401,12 +401,12 @@ body.vane-body {
   text-transform: uppercase;
   letter-spacing: 0.15em;
   cursor: pointer;
-  transition: var(--transition);
+  transition: var(--transicion);
   margin-top: 1rem;
 }
 
 .vane-submit-btn:hover {
-  background-color: var(--color-accent);
+  background-color: var(--color-dorado);
   color: white;
 }
 
@@ -421,7 +421,7 @@ body.vane-body {
 
 .success-state-icon {
   font-size: 4rem;
-  color: var(--success-color);
+  color: var(--color-exito);
 }
 
 /* Footer */
@@ -429,7 +429,7 @@ footer.vane-footer {
   padding: 80px 20px;
   text-align: center;
   background-color: var(--color-blanco);
-  border-top: 1px solid var(--color-blanco-soft);
+  border-top: 1px solid var(--color-blanco-suave);
   font-family: var(--font-sans);
   font-size: 0.8rem;
   letter-spacing: 0.2em;

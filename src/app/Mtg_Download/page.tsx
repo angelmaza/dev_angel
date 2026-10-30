@@ -1,13 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import "./descargador.css";
+import { crearPdfCartas, CARTAS_POR_HOJA, type CartaPdf, type FuenteImagen } from "./pdfCartas";
 
-const api = "https://api.scryfall.com";
+const URL_API = "https://api.scryfall.com";
 
-interface TextosLang {
+// Una imagen de carta encontrada. Las cartas dobles generan dos: la segunda lleva esDorso = true.
+interface Carta {
+  nombre: string;
+  urlVista: string;
+  urlDescarga: string;
+  copias: number;
+  esDorso: boolean;
+}
+
+// Imagen elegida por el usuario para una trasera
+interface TraseraElegida {
+  archivo: File;
+  url: string; // object URL para la vista previa
+}
+
+interface TextosIdioma {
   titulo: string;
   aviso: string;
   instrucciones: string;
@@ -17,7 +33,7 @@ interface TextosLang {
   lateralIzqTexto: string;
   lateralDerTitulo: string;
   lateralDerTexto: string;
-  placeholder: string;
+  textoEjemplo: string;
   esperando: string;
   generando: string;
   completado: string;
@@ -26,10 +42,25 @@ interface TextosLang {
   noEncontrada: (nombre: string) => string;
   sinImagen: (nombre: string) => string;
   noExisteES?: (nombre: string) => string;
-  fallbackEN?: (nombre: string) => string;
+  respaldoEN?: (nombre: string) => string;
+  botonPdf: string;
+  pdfTitulo: string;
+  pdfTraseraGeneral: string;
+  pdfElegirTrasera: string;
+  pdfQuitar: string;
+  pdfCambiar: string;
+  pdfCopias: string;
+  pdfTraseraCarta: string;
+  pdfCaraB: string;
+  pdfSinTrasera: string;
+  pdfDescargar: string;
+  pdfResumen: (cartas: number, hojas: number) => string;
+  pdfConfirmarSinTrasera: string;
+  pdfListo: (nombre: string, mb: string) => string;
+  pdfError: (mensaje: string) => string;
 }
 
-const textos: { en: TextosLang; es: TextosLang } = {
+const textos: { en: TextosIdioma; es: TextosIdioma } = {
   en: {
     titulo: "MTG PNG Downloader",
     aviso: "If something breaks, I am not responsible :)",
@@ -40,7 +71,7 @@ const textos: { en: TextosLang; es: TextosLang } = {
     lateralIzqTexto: "Go to Moxfield. Click to export your deck list. Copy for moxfield.",
     lateralDerTitulo: "Notes",
     lateralDerTexto: "Images downloaded using the Scryfall API.",
-    placeholder:
+    textoEjemplo:
       "1 Giada, Font of Hope (FDN) 141\n1 Akroma's Will (M3C) 165\n1 Angel of Destiny (PZNR) 2p *F*",
     esperando: "Waiting...",
     generando: "Generating ZIP...",
@@ -49,6 +80,21 @@ const textos: { en: TextosLang; es: TextosLang } = {
     total: (n) => `Total of <strong>${n} cards</strong>. Double-faced cards count as 2.`,
     noEncontrada: (nombre) => `<h4>Warning: ${nombre} was not found. Download it manually.</h4>`,
     sinImagen: (nombre) => `<p>No images available for <em>${nombre}</em>.</p>`,
+    botonPdf: "Download as PDF",
+    pdfTitulo: "Print PDF (A4, 3×3)",
+    pdfTraseraGeneral: "Back for all cards",
+    pdfElegirTrasera: "Click to choose an image",
+    pdfQuitar: "Remove",
+    pdfCambiar: "Change back",
+    pdfCopias: "Copies",
+    pdfTraseraCarta: "Back",
+    pdfCaraB: "Back face",
+    pdfSinTrasera: "General",
+    pdfDescargar: "Download PDF",
+    pdfResumen: (c, h) => `${c} cards · ${h} sheet${h === 1 ? "" : "s"}`,
+    pdfConfirmarSinTrasera: "No back chosen. Generate only the fronts?",
+    pdfListo: (n, mb) => `Done: ${n} (${mb} MB)`,
+    pdfError: (m) => `Error creating the PDF: ${m}`,
   },
   es: {
     titulo: "Descargador PNG MTG",
@@ -60,7 +106,7 @@ const textos: { en: TextosLang; es: TextosLang } = {
     lateralIzqTexto: "Ve a moxfield, click en exportar en la página de tu mazo luego clicka en copiar para moxfield.",
     lateralDerTitulo: "Notas",
     lateralDerTexto: "Imagenes descargadas usando la API de Scryfall. Si una carta no tiene una imagen buena en español, intentará usar una versión inglesa de mayor calidad. Si optas por ingles todas se descargaran en ENG",
-    placeholder:
+    textoEjemplo:
       "1 Giada, Font of Hope (FDN) 141\n1 Akroma's Will (M3C) 165\n1 Angel of Destiny (PZNR) 2p *F*",
     esperando: "Esperando descarga...",
     generando: "Generando archivo ZIP...",
@@ -71,75 +117,111 @@ const textos: { en: TextosLang; es: TextosLang } = {
     sinImagen: (nombre) => `<p>Sin imágenes disponibles para <em>${nombre}</em>.</p>`,
     noExisteES: (nombre) =>
       `<p>No existe impresión en <strong>ES</strong> para <em>${nombre}</em>. Se usa la impresión por defecto.</p>`,
-    fallbackEN: (nombre) =>
+    respaldoEN: (nombre) =>
       `<p>Para <em>${nombre}</em>, la imagen en ES era de baja calidad. Se sustituyó por una imagen en <strong>EN</strong>.</p>`,
+    botonPdf: "Descargar como PDF",
+    pdfTitulo: "PDF para imprimir (A4, 3×3)",
+    pdfTraseraGeneral: "Trasera de todas las cartas",
+    pdfElegirTrasera: "Haz clic para elegir una imagen",
+    pdfQuitar: "Quitar",
+    pdfCambiar: "Cambiar trasera",
+    pdfCopias: "Copias",
+    pdfTraseraCarta: "Trasera",
+    pdfCaraB: "Cara B",
+    pdfSinTrasera: "General",
+    pdfDescargar: "Descargar PDF",
+    pdfResumen: (c, h) => `${c} cartas · ${h} hoja${h === 1 ? "" : "s"}`,
+    pdfConfirmarSinTrasera: "No has elegido trasera. ¿Generar solo las caras frontales?",
+    pdfListo: (n, mb) => `Listo: ${n} (${mb} MB)`,
+    pdfError: (m) => `Error al crear el PDF: ${m}`,
   },
 };
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const esperar = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-function imageQualityRank(image_uris: any) {
-  if (!image_uris) return 0;
-  if (image_uris.png) return 3;
-  if (image_uris.large) return 2;
-  if (image_uris.normal) return 1;
+function rangoCalidadImagen(uris: any) {
+  if (!uris) return 0;
+  if (uris.png) return 3;
+  if (uris.large) return 2;
+  if (uris.normal) return 1;
   return 0;
 }
 
-function pickBestImage(image_uris: any) {
-  const display = image_uris?.large || image_uris?.normal || image_uris?.small || null;
-  const download = image_uris?.png || image_uris?.large || image_uris?.normal || image_uris?.small || null;
-  return { display, download, rank: imageQualityRank(image_uris) };
+function elegirMejorImagen(uris: any) {
+  const urlVista = uris?.large || uris?.normal || uris?.small || null;
+  const urlDescarga = uris?.png || uris?.large || uris?.normal || uris?.small || null;
+  return { urlVista, urlDescarga, rango: rangoCalidadImagen(uris) };
 }
 
 export default function DescargadorPngsMtg() {
-  const [lang, setLang] = useState<"es" | "en">("es");
-  const [cartasText, setCartasText] = useState<string>(
+  const [idioma, setIdioma] = useState<"es" | "en">("en");
+  const [textoCartas, setTextoCartas] = useState<string>(
     "1 Giada, Font of Hope (FDN) 141\n1 Akroma's Will (M3C) 165\n1 Angel of Destiny (PZNR) 2p *F*"
   );
   
-  const [showProgreso, setShowProgreso] = useState<boolean>(false);
+  const [mostrarProgreso, setMostrarProgreso] = useState<boolean>(false);
   const [progresoMax, setProgresoMax] = useState<number>(0);
-  const [progresoVal, setProgresoVal] = useState<number>(0);
-  const [estadoText, setEstadoText] = useState<string>("");
+  const [progresoValor, setProgresoValor] = useState<number>(0);
+  const [textoEstado, setTextoEstado] = useState<string>("");
   
-  const [errorHtml, setErrorHtml] = useState<string>("");
-  const [numCartasHtml, setNumCartasHtml] = useState<string>("");
-  const [cartasFinal, setCartasFinal] = useState<Array<[string, string, string]>>([]);
+  const [htmlErrores, setHtmlErrores] = useState<string>("");
+  const [htmlNumCartas, setHtmlNumCartas] = useState<string>("");
+  const [cartasFinal, setCartasFinal] = useState<Carta[]>([]);
 
-  const t = textos[lang];
+  // Panel de PDF
+  const [pdfAbierto, setPdfAbierto] = useState(false);
+  const [traseraGeneral, setTraseraGeneral] = useState<TraseraElegida | null>(null);
+  const [traserasCarta, setTraserasCarta] = useState<Record<number, TraseraElegida>>({});
+  const [pdfGenerando, setPdfGenerando] = useState(false);
+  const [pdfProgreso, setPdfProgreso] = useState(0);
+  const [pdfEstado, setPdfEstado] = useState("");
+  const inputTraseraGeneral = useRef<HTMLInputElement>(null);
+  const inputTraseraCarta = useRef<HTMLInputElement>(null);
+  const cartaEligiendoTrasera = useRef<number | null>(null);
 
-  function cambiarIdioma(nuevoLang: "en" | "es") {
-    setLang(nuevoLang);
+  const t = textos[idioma];
+
+  function cambiarIdioma(nuevoIdioma: "en" | "es") {
+    setIdioma(nuevoIdioma);
   }
 
-  function limpiarUI() {
-    setErrorHtml("");
-    setNumCartasHtml("");
+  function limpiarInterfaz() {
+    setHtmlErrores("");
+    setHtmlNumCartas("");
     setCartasFinal([]);
-    setShowProgreso(false);
-    setEstadoText(textos[lang].esperando);
+    setMostrarProgreso(false);
+    setTextoEstado(textos[idioma].esperando);
+    // Las traseras por carta van ligadas a la búsqueda anterior; la general se mantiene
+    Object.values(traserasCarta).forEach((tr) => URL.revokeObjectURL(tr.url));
+    setTraserasCarta({});
+    setPdfEstado("");
   }
 
   function procesarCartas() {
-    const lineas = cartasText.trim().split("\n");
+    const lineas = textoCartas.trim().split("\n");
 
     return lineas
       .map((linea) => {
-        const linea_bien = linea.replace(/\*\S+\*/g, "").trim();
-        const match = linea_bien.match(/^\d+\s+(.+?)\s+\(([^)]+)\)\s+(\S+)$/);
+        const lineaLimpia = linea.replace(/\*\S+\*/g, "").trim();
+        // Cabeceras como "SIDEBOARD:" no son cartas
+        if (/sideboard/i.test(lineaLimpia)) return null;
+        const coincidencia = lineaLimpia.match(/^(\d+)\s+(.+?)\s+\(([^)]+)\)\s+(\S+)$/);
 
-        if (match) {
+        if (coincidencia) {
           return {
-            nombre: match[1].trim(),
-            codigo: match[2].trim(),
-            numero: match[3].trim(),
+            copias: Math.max(1, parseInt(coincidencia[1], 10)),
+            nombre: coincidencia[2].trim(),
+            codigo: coincidencia[3].trim(),
+            numero: coincidencia[4].trim(),
           };
         }
 
-        if (linea_bien) {
+        if (lineaLimpia) {
+          // Línea sin set: "4 Mountain" o solo "Mountain"
+          const conCantidad = lineaLimpia.match(/^(\d+)\s+(.+)$/);
           return {
-            nombre: linea_bien,
+            copias: conCantidad ? Math.max(1, parseInt(conCantidad[1], 10)) : 1,
+            nombre: conCantidad ? conCantidad[2].trim() : lineaLimpia,
             codigo: "",
             numero: "",
           };
@@ -147,187 +229,209 @@ export default function DescargadorPngsMtg() {
 
         return null;
       })
-      .filter(Boolean) as Array<{ nombre: string; codigo: string; numero: string }>;
+      .filter(Boolean) as Array<{ copias: number; nombre: string; codigo: string; numero: string }>;
   }
 
-  async function buscarimg() {
-    if (lang === "es") {
-      await buscarimgES();
+  async function buscarImagenes() {
+    if (idioma === "es") {
+      await buscarImagenesES();
     } else {
-      await buscarimgEN();
+      await buscarImagenesEN();
     }
   }
 
-  async function buscarimgEN() {
-    limpiarUI();
+  async function buscarImagenesEN() {
+    limpiarInterfaz();
 
     const cartas = procesarCartas();
-    const cartas_final_local: Array<[string, string, string]> = [];
-    let localErrorHtml = "";
+    const cartasFinalLocal: Carta[] = [];
+    let htmlErroresLocal = "";
     let contadorPngs = 0;
 
     await Promise.all(
       cartas.map(async (carta) => {
-        const codigo_set = carta.codigo;
-        const numero_carta = carta.numero;
+        const codigoSet = carta.codigo;
+        const numeroCarta = carta.numero;
 
-        if (!codigo_set || !numero_carta) {
-          localErrorHtml += textos.en.noEncontrada(carta.nombre);
-          setErrorHtml(localErrorHtml);
+        if (!codigoSet || !numeroCarta) {
+          htmlErroresLocal += textos.en.noEncontrada(carta.nombre);
+          setHtmlErrores(htmlErroresLocal);
           return;
         }
 
-        const endpoint = `${api}/cards/${encodeURIComponent(codigo_set)}/${encodeURIComponent(numero_carta)}`;
+        const urlConsulta = `${URL_API}/cards/${encodeURIComponent(codigoSet)}/${encodeURIComponent(numeroCarta)}`;
 
         try {
-          await delay(100);
+          await esperar(100);
 
-          const response = await fetch(endpoint, {
+          const respuesta = await fetch(urlConsulta, {
             headers: {
               "User-Agent": "MTGSearchApp/1.0",
               Accept: "application/json",
             },
           });
 
-          if (!response.ok) {
-            throw new Error("Error en la búsqueda: " + response.statusText);
+          if (!respuesta.ok) {
+            throw new Error("Error en la búsqueda: " + respuesta.statusText);
           }
 
-          const data = await response.json();
+          const datos = await respuesta.json();
 
-          if (data.card_faces && (data.layout === "transform" || data.layout === "modal_dfc")) {
-            data.card_faces.forEach((face: any) => {
-              cartas_final_local.push([
-                face.name,
-                face.image_uris?.normal || face.image_uris?.large || face.image_uris?.small || "",
-                face.image_uris?.png || face.image_uris?.large || face.image_uris?.normal || "",
-              ]);
+          if (
+            datos.card_faces &&
+            (datos.layout === "transform" || datos.layout === "modal_dfc" || datos.layout === "double_faced_token")
+          ) {
+            datos.card_faces.forEach((cara: any, indice: number) => {
+              const { urlVista, urlDescarga } = elegirMejorImagen(cara.image_uris || {});
+              if (!urlVista && !urlDescarga) return;
+              cartasFinalLocal.push({
+                nombre: cara.name,
+                urlVista: urlVista || urlDescarga || "",
+                urlDescarga: urlDescarga || urlVista || "",
+                copias: carta.copias,
+                esDorso: indice > 0,
+              });
               contadorPngs++;
             });
           } else {
-            cartas_final_local.push([
-              data.name,
-              data.image_uris?.normal || data.image_uris?.large || data.image_uris?.small || "",
-              data.image_uris?.png || data.image_uris?.large || data.image_uris?.normal || "",
-            ]);
+            // Algunas cartas (p. ej. las reversibles) solo tienen imagen dentro de card_faces
+            const { urlVista, urlDescarga } = elegirMejorImagen(datos.image_uris || datos.card_faces?.[0]?.image_uris || {});
+            if (!urlVista && !urlDescarga) {
+              htmlErroresLocal += textos.en.sinImagen(carta.nombre);
+              setHtmlErrores(htmlErroresLocal);
+              return;
+            }
+            cartasFinalLocal.push({
+              nombre: datos.name,
+              urlVista: urlVista || urlDescarga || "",
+              urlDescarga: urlDescarga || urlVista || "",
+              copias: carta.copias,
+              esDorso: false,
+            });
             contadorPngs++;
           }
         } catch (error: any) {
           console.error(`❌ Fallo con ${carta.nombre}: ${error.message}`);
-          localErrorHtml += textos.en.noEncontrada(carta.nombre);
-          setErrorHtml(localErrorHtml);
+          htmlErroresLocal += textos.en.noEncontrada(carta.nombre);
+          setHtmlErrores(htmlErroresLocal);
         }
       })
     );
 
-    setNumCartasHtml(textos.en.total(contadorPngs));
-    setCartasFinal(cartas_final_local);
+    setHtmlNumCartas(textos.en.total(contadorPngs));
+    setCartasFinal(cartasFinalLocal);
   }
 
-  const preferredLang = "es";
-  const politeDelayMs = 120;
+  const idiomaPreferido = "es";
+  const pausaCortesiaMs = 120;
 
-  function normalizeCardToEntriesWithFallback(esCard: any, enFallbackCard: any) {
-    const entries: Array<[string, string, string]> = [];
-    const isDFC =
-      esCard.card_faces &&
-      (esCard.layout === "transform" || esCard.layout === "modal_dfc" || esCard.layout === "double_faced_token");
+  function cartaAEntradasConRespaldo(cartaES: any, cartaRespaldoEN: any, copias: number) {
+    const entradas: Carta[] = [];
+    const esDobleCara =
+      cartaES.card_faces &&
+      (cartaES.layout === "transform" || cartaES.layout === "modal_dfc" || cartaES.layout === "double_faced_token");
 
-    if (isDFC) {
-      const esFaces = esCard.card_faces;
-      const enFaces = enFallbackCard?.card_faces || null;
+    if (esDobleCara) {
+      const carasES = cartaES.card_faces;
+      const carasEN = cartaRespaldoEN?.card_faces || null;
 
-      esFaces.forEach((face: any, idx: number) => {
-        const esPick = pickBestImage(face.image_uris || {});
-        let display = esPick.display;
-        let download = esPick.download;
+      carasES.forEach((cara: any, indice: number) => {
+        const eleccionES = elegirMejorImagen(cara.image_uris || {});
+        let urlVista = eleccionES.urlVista;
+        let urlDescarga = eleccionES.urlDescarga;
 
-        if (esPick.rank === 0 && enFallbackCard) {
-          const enFace = enFaces ? enFaces[idx] : null;
-          const enPick = pickBestImage((enFace ? enFace.image_uris : enFallbackCard.image_uris) || {});
-          if (enPick.rank > esPick.rank) {
-            display = enPick.display;
-            download = enPick.download;
+        if (eleccionES.rango === 0 && cartaRespaldoEN) {
+          const caraEN = carasEN ? carasEN[indice] : null;
+          const eleccionEN = elegirMejorImagen((caraEN ? caraEN.image_uris : cartaRespaldoEN.image_uris) || {});
+          if (eleccionEN.rango > eleccionES.rango) {
+            urlVista = eleccionEN.urlVista;
+            urlDescarga = eleccionEN.urlDescarga;
           }
         }
 
-        const shownName = face.printed_name || face.name;
-        if (display || download) {
-          entries.push([shownName, display || "", download || display || ""]);
+        const nombreMostrado = cara.printed_name || cara.name;
+        if (urlVista || urlDescarga) {
+          entradas.push({
+            nombre: nombreMostrado,
+            urlVista: urlVista || "",
+            urlDescarga: urlDescarga || urlVista || "",
+            copias,
+            esDorso: entradas.length > 0,
+          });
         }
       });
     } else {
-      const esPick = pickBestImage(esCard.image_uris || esCard.card_faces?.[0]?.image_uris || {});
-      let display = esPick.display;
-      let download = esPick.download;
+      const eleccionES = elegirMejorImagen(cartaES.image_uris || cartaES.card_faces?.[0]?.image_uris || {});
+      let urlVista = eleccionES.urlVista;
+      let urlDescarga = eleccionES.urlDescarga;
 
-      if (esPick.rank === 0 && enFallbackCard) {
-        const enPick = pickBestImage(enFallbackCard.image_uris || enFallbackCard.card_faces?.[0]?.image_uris || {});
-        if (enPick.rank > esPick.rank) {
-          display = enPick.display;
-          download = enPick.download;
+      if (eleccionES.rango === 0 && cartaRespaldoEN) {
+        const eleccionEN = elegirMejorImagen(cartaRespaldoEN.image_uris || cartaRespaldoEN.card_faces?.[0]?.image_uris || {});
+        if (eleccionEN.rango > eleccionES.rango) {
+          urlVista = eleccionEN.urlVista;
+          urlDescarga = eleccionEN.urlDescarga;
         }
       }
 
-      const shownName = esCard.printed_name || esCard.name;
-      if (display || download) {
-        entries.push([shownName, display || "", download || display || ""]);
+      const nombreMostrado = cartaES.printed_name || cartaES.name;
+      if (urlVista || urlDescarga) {
+        entradas.push({ nombre: nombreMostrado, urlVista: urlVista || "", urlDescarga: urlDescarga || urlVista || "", copias, esDorso: false });
       }
     }
 
-    return entries;
+    return entradas;
   }
 
-  async function fetchByExactName(name: string) {
-    const url = `${api}/cards/named?exact=${encodeURIComponent(name)}`;
-    const resp = await fetch(url, { headers: { Accept: "application/json" } });
-    if (!resp.ok) throw new Error(`named?exact fallo: ${resp.status} ${resp.statusText}`);
-    return resp.json();
+  async function buscarPorNombreExacto(nombreCarta: string) {
+    const url = `${URL_API}/cards/named?exact=${encodeURIComponent(nombreCarta)}`;
+    const respuesta = await fetch(url, { headers: { Accept: "application/json" } });
+    if (!respuesta.ok) throw new Error(`named?exact fallo: ${respuesta.status} ${respuesta.statusText}`);
+    return respuesta.json();
   }
 
-  async function fetchPrintsByOracleAndLang(oracleId: string, langQuery: string) {
-    const results: any[] = [];
-    let next = `${api}/cards/search?q=${encodeURIComponent(`oracleid:${oracleId} lang:${langQuery}`)}&unique=prints`;
+  async function buscarImpresionesPorOracleEIdioma(idOracle: string, idiomaConsulta: string) {
+    const resultados: any[] = [];
+    let siguiente = `${URL_API}/cards/search?q=${encodeURIComponent(`oracleid:${idOracle} lang:${idiomaConsulta}`)}&unique=prints`;
 
-    while (next) {
-      const resp = await fetch(next, { headers: { Accept: "application/json" } });
-      if (!resp.ok) throw new Error(`search ${langQuery} fallo: ${resp.status} ${resp.statusText}`);
-      const data = await resp.json();
-      (data.data || []).forEach((c: any) => results.push(c));
-      next = data.has_more ? data.next_page : null;
-      if (next) await delay(80);
+    while (siguiente) {
+      const respuesta = await fetch(siguiente, { headers: { Accept: "application/json" } });
+      if (!respuesta.ok) throw new Error(`search ${idiomaConsulta} fallo: ${respuesta.status} ${respuesta.statusText}`);
+      const datos = await respuesta.json();
+      (datos.data || []).forEach((c: any) => resultados.push(c));
+      siguiente = datos.has_more ? datos.next_page : null;
+      if (siguiente) await esperar(80);
     }
 
-    return results;
+    return resultados;
   }
 
-  function chooseBestPrint(cards: any[]) {
-    if (!cards || cards.length === 0) return null;
+  function elegirMejorImpresion(impresiones: any[]) {
+    if (!impresiones || impresiones.length === 0) return null;
 
-    const scored = cards.map((c) => {
-      const iu = c.image_uris || c.card_faces?.[0]?.image_uris || {};
-      const rank = imageQualityRank(iu);
-      const highres = !!c.highres_image;
-      const isPromo = c.set_type === "promo";
-      const released = c.released_at || "1900-01-01";
-      const score = rank + (highres ? 1 : 0) - (isPromo ? 0.5 : 0);
-      return { c, score, released };
+    const puntuadas = impresiones.map((c) => {
+      const uris = c.image_uris || c.card_faces?.[0]?.image_uris || {};
+      const rango = rangoCalidadImagen(uris);
+      const altaResolucion = !!c.highres_image;
+      const esPromo = c.set_type === "promo";
+      const fechaSalida = c.released_at || "1900-01-01";
+      const puntuacion = rango + (altaResolucion ? 1 : 0) - (esPromo ? 0.5 : 0);
+      return { c, puntuacion, fechaSalida };
     });
 
-    scored.sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      return (b.released || "").localeCompare(a.released || "");
+    puntuadas.sort((a, b) => {
+      if (b.puntuacion !== a.puntuacion) return b.puntuacion - a.puntuacion;
+      return (b.fechaSalida || "").localeCompare(a.fechaSalida || "");
     });
 
-    return scored[0].c;
+    return puntuadas[0].c;
   }
 
-  async function buscarimgES() {
-    limpiarUI();
+  async function buscarImagenesES() {
+    limpiarInterfaz();
 
     const cartas = procesarCartas();
-    const cartas_final_local: Array<[string, string, string]> = [];
-    let localErrorHtml = "";
+    const cartasFinalLocal: Carta[] = [];
+    let htmlErroresLocal = "";
     let contadorPngs = 0;
 
     await Promise.all(
@@ -335,110 +439,193 @@ export default function DescargadorPngsMtg() {
         const { nombre } = carta;
 
         try {
-          await delay(politeDelayMs);
+          await esperar(pausaCortesiaMs);
 
-          const base = await fetchByExactName(nombre);
-          const oracleId = base.oracle_id;
+          const cartaBase = await buscarPorNombreExacto(nombre);
+          const idOracle = cartaBase.oracle_id;
 
-          const printsEs = await fetchPrintsByOracleAndLang(oracleId, preferredLang);
-          let chosenES = chooseBestPrint(printsEs);
+          const impresionesES = await buscarImpresionesPorOracleEIdioma(idOracle, idiomaPreferido);
+          let elegidaES = elegirMejorImpresion(impresionesES);
 
-          if (!chosenES) {
-            chosenES = base;
+          if (!elegidaES) {
+            elegidaES = cartaBase;
             if (textos.es.noExisteES) {
-              localErrorHtml += textos.es.noExisteES(nombre);
-              setErrorHtml(localErrorHtml);
+              htmlErroresLocal += textos.es.noExisteES(nombre);
+              setHtmlErrores(htmlErroresLocal);
             }
           }
 
-          let needEN = false;
+          let necesitaEN = false;
 
           if (
-            chosenES.card_faces &&
-            (chosenES.layout === "transform" || chosenES.layout === "modal_dfc" || chosenES.layout === "double_faced_token")
+            elegidaES.card_faces &&
+            (elegidaES.layout === "transform" || elegidaES.layout === "modal_dfc" || elegidaES.layout === "double_faced_token")
           ) {
-            for (const face of chosenES.card_faces) {
-              const rank = imageQualityRank(face.image_uris || {});
-              if (rank === 0) {
-                needEN = true;
+            for (const cara of elegidaES.card_faces) {
+              const rango = rangoCalidadImagen(cara.image_uris || {});
+              if (rango === 0) {
+                necesitaEN = true;
                 break;
               }
             }
           } else {
-            const rank = imageQualityRank(chosenES.image_uris || chosenES.card_faces?.[0]?.image_uris || {});
-            if (rank === 0) needEN = true;
+            const rango = rangoCalidadImagen(elegidaES.image_uris || elegidaES.card_faces?.[0]?.image_uris || {});
+            if (rango === 0) necesitaEN = true;
           }
 
-          let chosenEN = null;
+          let elegidaEN = null;
 
-          if (needEN) {
-            const printsEn = await fetchPrintsByOracleAndLang(oracleId, "en");
-            chosenEN = chooseBestPrint(printsEn) || null;
+          if (necesitaEN) {
+            const impresionesEN = await buscarImpresionesPorOracleEIdioma(idOracle, "en");
+            elegidaEN = elegirMejorImpresion(impresionesEN) || null;
 
-            if (chosenEN && textos.es.fallbackEN) {
-              localErrorHtml += textos.es.fallbackEN(nombre);
-              setErrorHtml(localErrorHtml);
+            if (elegidaEN && textos.es.respaldoEN) {
+              htmlErroresLocal += textos.es.respaldoEN(nombre);
+              setHtmlErrores(htmlErroresLocal);
             }
           }
 
-          const entries = normalizeCardToEntriesWithFallback(chosenES, chosenEN);
+          const entradas = cartaAEntradasConRespaldo(elegidaES, elegidaEN, carta.copias);
 
-          if (entries.length === 0) {
-            localErrorHtml += textos.es.sinImagen(nombre);
-            setErrorHtml(localErrorHtml);
+          if (entradas.length === 0) {
+            htmlErroresLocal += textos.es.sinImagen(nombre);
+            setHtmlErrores(htmlErroresLocal);
             return;
           }
 
-          entries.forEach((e) => cartas_final_local.push(e));
-          contadorPngs += entries.length;
+          entradas.forEach((e) => cartasFinalLocal.push(e));
+          contadorPngs += entradas.length;
         } catch (error) {
           console.error(`❌ Error con ${nombre}:`, error);
-          localErrorHtml += textos.es.noEncontrada(nombre);
-          setErrorHtml(localErrorHtml);
+          htmlErroresLocal += textos.es.noEncontrada(nombre);
+          setHtmlErrores(htmlErroresLocal);
         }
       })
     );
 
-    setNumCartasHtml(textos.es.total(contadorPngs));
-    setCartasFinal(cartas_final_local);
+    setHtmlNumCartas(textos.es.total(contadorPngs));
+    setCartasFinal(cartasFinalLocal);
   }
 
   async function descargarTodasLasCartas() {
     const zip = new JSZip();
-    const folder = zip.folder("cards");
-    if (!folder) return;
+    const carpeta = zip.folder("cards");
+    if (!carpeta) return;
 
-    setShowProgreso(true);
+    setMostrarProgreso(true);
     setProgresoMax(cartasFinal.length);
-    setProgresoVal(0);
+    setProgresoValor(0);
 
     for (let i = 0; i < cartasFinal.length; i++) {
-      const [nombre, , urlDescarga] = cartasFinal[i];
+      const { nombre, urlDescarga } = cartasFinal[i];
 
       try {
-        setEstadoText(textos[lang].descargando(nombre, i + 1, cartasFinal.length));
+        setTextoEstado(textos[idioma].descargando(nombre, i + 1, cartasFinal.length));
 
-        const response = await fetch(urlDescarga);
-        if (!response.ok) {
+        const respuesta = await fetch(urlDescarga);
+        if (!respuesta.ok) {
           throw new Error(`Error al descargar: ${nombre}`);
         }
 
-        const blob = await response.blob();
-        const safeName = (nombre || "carta").replace(/[<>:"/\\|?*\x00-\x1F]/g, "_");
-        folder.file(`${String(i).padStart(3, "0")}_${safeName}.png`, blob);
+        const blob = await respuesta.blob();
+        const nombreSeguro = (nombre || "carta").replace(/[<>:"/\\|?*\x00-\x1F]/g, "_");
+        carpeta.file(`${String(i).padStart(3, "0")}_${nombreSeguro}.png`, blob);
 
-        setProgresoVal(i + 1);
+        setProgresoValor(i + 1);
       } catch (error) {
         console.error(`Error descargando ${nombre}:`, error);
       }
 
-      await delay(80);
+      await esperar(80);
     }
 
-    setEstadoText(textos[lang].generando);
-    const content = await zip.generateAsync({ type: "blob" });
-    saveAs(content, "cards.zip");
-    setEstadoText(textos[lang].completado);
+    setTextoEstado(textos[idioma].generando);
+    const contenido = await zip.generateAsync({ type: "blob" });
+    saveAs(contenido, "cards.zip");
+    setTextoEstado(textos[idioma].completado);
+  }
+
+  // ---------- PDF ----------
+
+  // Cartas que van al PDF: las caras B de las dobles no se imprimen como frontal,
+  // se usan como su trasera por defecto
+  const cartasPdf = cartasFinal
+    .map((carta, i) => ({ carta, i, caraB: cartasFinal[i + 1]?.esDorso ? cartasFinal[i + 1] : null }))
+    .filter(({ carta }) => !carta.esDorso);
+  const totalCopiasPdf = cartasPdf.reduce((n, { carta }) => n + carta.copias, 0);
+
+  function cambiarCopias(i: number, valor: string) {
+    const copias = Math.max(0, Math.min(99, parseInt(valor, 10) || 0));
+    setCartasFinal((anterior) => anterior.map((c, j) => (j === i ? { ...c, copias } : c)));
+  }
+
+  function elegirTraseraGeneral(archivo: File | undefined) {
+    if (!archivo || !archivo.type.startsWith("image/")) return;
+    if (traseraGeneral) URL.revokeObjectURL(traseraGeneral.url);
+    setTraseraGeneral({ archivo, url: URL.createObjectURL(archivo) });
+  }
+
+  function quitarTraseraGeneral() {
+    if (traseraGeneral) URL.revokeObjectURL(traseraGeneral.url);
+    setTraseraGeneral(null);
+  }
+
+  function abrirSelectorTraseraCarta(i: number) {
+    cartaEligiendoTrasera.current = i;
+    inputTraseraCarta.current?.click();
+  }
+
+  function elegirTraseraCarta(archivo: File | undefined) {
+    const i = cartaEligiendoTrasera.current;
+    cartaEligiendoTrasera.current = null;
+    if (i === null || !archivo || !archivo.type.startsWith("image/")) return;
+    setTraserasCarta((anterior) => {
+      if (anterior[i]) URL.revokeObjectURL(anterior[i].url);
+      return { ...anterior, [i]: { archivo, url: URL.createObjectURL(archivo) } };
+    });
+  }
+
+  function quitarTraseraCarta(i: number) {
+    setTraserasCarta((anterior) => {
+      if (!anterior[i]) return anterior;
+      URL.revokeObjectURL(anterior[i].url);
+      const resto = { ...anterior };
+      delete resto[i];
+      return resto;
+    });
+  }
+
+  async function descargarPdf() {
+    const cartasParaPdf: CartaPdf[] = cartasPdf.map(({ carta, i, caraB }) => {
+      const propia = traserasCarta[i];
+      let trasera: FuenteImagen | null = null;
+      if (propia) trasera = { tipo: "archivo", archivo: propia.archivo };
+      else if (caraB) trasera = { tipo: "url", url: caraB.urlDescarga };
+      return { nombre: carta.nombre, frontal: { tipo: "url", url: carta.urlDescarga }, trasera, copias: carta.copias };
+    });
+
+    const general: FuenteImagen | null = traseraGeneral ? { tipo: "archivo", archivo: traseraGeneral.archivo } : null;
+    const hayTraseras = !!general || cartasParaPdf.some((c) => c.copias > 0 && c.trasera);
+    if (!hayTraseras && !confirm(t.pdfConfirmarSinTrasera)) return;
+
+    setPdfGenerando(true);
+    try {
+      const { bytes, total } = await crearPdfCartas(cartasParaPdf, general, (fraccion, mensaje) => {
+        setPdfProgreso(fraccion);
+        setPdfEstado(mensaje);
+      });
+      const fecha = new Date();
+      const relleno = (v: number) => String(v).padStart(2, "0");
+      const nombre = `MTG_${fecha.getFullYear()}${relleno(fecha.getMonth() + 1)}${relleno(fecha.getDate())}_${relleno(fecha.getHours())}${relleno(fecha.getMinutes())}_${total}cartas.pdf`;
+      saveAs(new Blob([bytes as BlobPart], { type: "application/pdf" }), nombre);
+      setPdfEstado(t.pdfListo(nombre, (bytes.length / 1048576).toFixed(1)));
+    } catch (err) {
+      console.error(err);
+      setPdfEstado(t.pdfError((err as Error).message));
+    } finally {
+      setPdfGenerando(false);
+      setPdfProgreso(0);
+    }
   }
 
   return (
@@ -452,20 +639,20 @@ export default function DescargadorPngsMtg() {
           <div className="barra-idioma" aria-label="Selector de idioma">
             <button
               type="button"
-              className={`boton-idioma ${lang === "en" ? "activo" : ""}`}
+              className={`boton-idioma ${idioma === "en" ? "activo" : ""}`}
               id="boton-en"
               onClick={() => cambiarIdioma("en")}
-              aria-pressed={lang === "en"}
+              aria-pressed={idioma === "en"}
             >
               <span>ENG</span>
             </button>
 
             <button
               type="button"
-              className={`boton-idioma ${lang === "es" ? "activo" : ""}`}
+              className={`boton-idioma ${idioma === "es" ? "activo" : ""}`}
               id="boton-es"
               onClick={() => cambiarIdioma("es")}
-              aria-pressed={lang === "es"}
+              aria-pressed={idioma === "es"}
             >
               <span>ESP</span>
             </button>
@@ -488,12 +675,12 @@ export default function DescargadorPngsMtg() {
           <textarea
             id="cartas"
             rows={10}
-            placeholder={t.placeholder}
-            value={cartasText}
-            onChange={(e) => setCartasText(e.target.value)}
+            placeholder={t.textoEjemplo}
+            value={textoCartas}
+            onChange={(e) => setTextoCartas(e.target.value)}
           />
 
-          <button id="boton-busqueda" className="boton-principal" onClick={buscarimg}>
+          <button id="boton-busqueda" className="boton-principal" onClick={buscarImagenes}>
             {t.botonBuscar}
           </button>
         </div>
@@ -509,27 +696,148 @@ export default function DescargadorPngsMtg() {
           <button className="boton-descarga" onClick={descargarTodasLasCartas}>
             {t.botonDescargar}
           </button>
+          <button
+            className={`boton-descarga boton-pdf ${pdfAbierto ? "activo" : ""}`}
+            onClick={() => setPdfAbierto((v) => !v)}
+            aria-expanded={pdfAbierto}
+          >
+            {t.botonPdf}
+          </button>
         </div>
       )}
 
-      {showProgreso && (
-        <div id="divprogreso" style={{ display: "block" }}>
-          <progress id="progreso" max={progresoMax} value={progresoVal} />
-          <p id="estado">{estadoText}</p>
-        </div>
-      )}
+      {cartasFinal.length > 0 && pdfAbierto && (
+        <section className="panel-pdf">
+          <h3>{t.pdfTitulo}</h3>
 
-      <div id="error" dangerouslySetInnerHTML={{ __html: errorHtml }} />
-      <div id="num_cartas" dangerouslySetInnerHTML={{ __html: numCartasHtml }} />
-
-      <div id="resultado">
-        {cartasFinal.map((carta, index) => (
-          <div className="card" key={index}>
-            <p className="card-nombre">{carta[0]}</p>
-            <img src={carta[1]} loading="lazy" decoding="async" className="card-imagen" alt={carta[0]} />
+          <div className="pdf-trasera-general">
+            <h4>{t.pdfTraseraGeneral}</h4>
+            <button
+              type="button"
+              className="pdf-caja-trasera"
+              onClick={() => inputTraseraGeneral.current?.click()}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                elegirTraseraGeneral(e.dataTransfer.files[0]);
+              }}
+            >
+              {traseraGeneral ? <img src={traseraGeneral.url} alt={t.pdfTraseraGeneral} /> : <span>{t.pdfElegirTrasera}</span>}
+            </button>
+            {traseraGeneral && (
+              <button type="button" className="pdf-boton-mini" onClick={quitarTraseraGeneral}>
+                {t.pdfQuitar}
+              </button>
+            )}
+            <input
+              ref={inputTraseraGeneral}
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={(e) => {
+                elegirTraseraGeneral(e.target.files?.[0]);
+                e.target.value = "";
+              }}
+            />
           </div>
-        ))}
-      </div>
+
+          <input
+            ref={inputTraseraCarta}
+            type="file"
+            accept="image/*"
+            hidden
+            onChange={(e) => {
+              elegirTraseraCarta(e.target.files?.[0]);
+              e.target.value = "";
+            }}
+          />
+
+          <div className="pdf-lista">
+            {cartasPdf.map(({ carta, i, caraB }) => {
+              const propia = traserasCarta[i];
+              const dorsoUrl = propia?.url || caraB?.urlVista || traseraGeneral?.url || null;
+              const dorsoTexto = propia ? null : caraB ? t.pdfCaraB : t.pdfSinTrasera;
+              return (
+                <div className="pdf-carta" key={i}>
+                  <p className="pdf-carta-nombre" title={carta.nombre}>{carta.nombre}</p>
+                  <div className="pdf-carta-caras">
+                    {carta.urlVista ? <img src={carta.urlVista} alt={carta.nombre} loading="lazy" /> : <span />}
+                    <button
+                      type="button"
+                      className="pdf-carta-dorso"
+                      title={t.pdfCambiar}
+                      onClick={() => abrirSelectorTraseraCarta(i)}
+                    >
+                      {dorsoUrl ? <img src={dorsoUrl} alt={t.pdfTraseraCarta} /> : <span>—</span>}
+                      {dorsoTexto && <small>{dorsoTexto}</small>}
+                    </button>
+                  </div>
+                  <div className="pdf-carta-controles">
+                    <label>
+                      {t.pdfCopias}
+                      <input
+                        type="number"
+                        min={0}
+                        max={99}
+                        value={carta.copias}
+                        onChange={(e) => cambiarCopias(i, e.target.value)}
+                      />
+                    </label>
+                    <button type="button" className="pdf-boton-mini" onClick={() => abrirSelectorTraseraCarta(i)}>
+                      {t.pdfCambiar}
+                    </button>
+                    {propia && (
+                      <button type="button" className="pdf-boton-mini" onClick={() => quitarTraseraCarta(i)}>
+                        {t.pdfQuitar}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="pdf-pie">
+            <span>{t.pdfResumen(totalCopiasPdf, Math.ceil(totalCopiasPdf / CARTAS_POR_HOJA))}</span>
+            <button
+              type="button"
+              className="boton-principal"
+              onClick={descargarPdf}
+              disabled={pdfGenerando || totalCopiasPdf === 0}
+            >
+              {t.pdfDescargar}
+            </button>
+            {pdfGenerando && <progress max={1} value={pdfProgreso} />}
+            {pdfEstado && <p className="pdf-estado">{pdfEstado}</p>}
+          </div>
+        </section>
+      )}
+
+      {mostrarProgreso && (
+        <div id="divprogreso" style={{ display: "block" }}>
+          <progress id="progreso" max={progresoMax} value={progresoValor} />
+          <p id="estado">{textoEstado}</p>
+        </div>
+      )}
+
+      <div id="error" dangerouslySetInnerHTML={{ __html: htmlErrores }} />
+      {/* Con el panel de PDF abierto la vista previa sobra: las cartas ya salen en el panel */}
+      {!pdfAbierto && (
+        <>
+          <div id="num_cartas" dangerouslySetInnerHTML={{ __html: htmlNumCartas }} />
+
+          <div id="resultado">
+            {cartasFinal.map((carta, index) => (
+              <div className="card" key={index}>
+                <p className="card-nombre">{carta.nombre}</p>
+                {carta.urlVista && (
+                  <img src={carta.urlVista} loading="lazy" decoding="async" className="card-imagen" alt={carta.nombre} />
+                )}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </main>
   );
 }

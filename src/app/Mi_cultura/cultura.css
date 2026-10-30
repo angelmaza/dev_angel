@@ -1,24 +1,24 @@
 :root {
-  --bg-dark: #19161d;
-  --bg-intermediate: #221e27;
-  --bg-card: #2c2733;
-  --bg-card-hover: #352e3d;
-  --border-color: #3e3547;
-  --text-main: #ecdcc9;
-  --text-muted: #bda893;
+  --fondo-oscuro: #19161d;
+  --fondo-intermedio: #221e27;
+  --fondo-tarjeta: #2c2733;
+  --fondo-tarjeta-hover: #352e3d;
+  --color-borde: #3e3547;
+  --texto-base: #ecdcc9;
+  --texto-apagado: #bda893;
   
-  --accent-gold: #d3986a;
-  --accent-green: #7ca184;
-  --accent-blue: #7ba3be;
-  --accent-red: #c56a65;
-  --accent-purple: #9a84b3;
+  --acento-dorado: #d3986a;
+  --acento-verde: #7ca184;
+  --acento-azul: #7ba3be;
+  --acento-rojo: #c56a65;
+  --acento-morado: #9a84b3;
   
-  --shadow: rgba(0, 0, 0, 0.4);
+  --sombra-oscura: rgba(0, 0, 0, 0.4);
 }
 
 body.cultura-body {
-  background-color: var(--bg-intermediate);
-  color: var(--text-main);
+  background-color: var(--fondo-intermedio);
+  color: var(--texto-base);
   font-family: 'Courier New', monospace, sans-serif;
 }
 
@@ -32,7 +32,7 @@ body.cultura-body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px dashed var(--border-color);
+  border-bottom: 2px dashed var(--color-borde);
   padding-bottom: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -40,13 +40,13 @@ body.cultura-body {
 .cultura-title {
   font-size: 2.2rem;
   text-transform: uppercase;
-  color: var(--accent-gold);
-  text-shadow: 2px 2px 0 var(--shadow);
+  color: var(--acento-dorado);
+  text-shadow: 2px 2px 0 var(--sombra-oscura);
 }
 
 .cultura-title span {
   font-size: 1rem;
-  color: var(--text-muted);
+  color: var(--texto-apagado);
   display: block;
   letter-spacing: 2px;
 }
@@ -69,9 +69,9 @@ body.cultura-body {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
-  background-color: var(--bg-dark);
+  background-color: var(--fondo-oscuro);
   padding: 0.4rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-borde);
   border-radius: 4px;
 }
 
@@ -79,7 +79,7 @@ body.cultura-body {
   flex: 1;
   background: none;
   border: none;
-  color: var(--text-muted);
+  color: var(--texto-apagado);
   padding: 0.6rem;
   font-family: inherit;
   font-size: 0.95rem;
@@ -91,13 +91,13 @@ body.cultura-body {
 }
 
 .cultura-tab:hover {
-  color: var(--text-main);
+  color: var(--texto-base);
   background-color: rgba(255, 255, 255, 0.03);
 }
 
 .cultura-tab.active {
   color: #000;
-  background-color: var(--accent-gold);
+  background-color: var(--acento-dorado);
   font-weight: bold;
 }
 
@@ -112,8 +112,8 @@ body.cultura-body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
+  background-color: var(--fondo-tarjeta);
+  border: 1px solid var(--color-borde);
   padding: 0.6rem 1rem;
   border-radius: 4px;
   cursor: pointer;
@@ -122,8 +122,8 @@ body.cultura-body {
 }
 
 .cultura-item-row:hover {
-  background-color: var(--bg-card-hover);
-  border-color: var(--accent-gold);
+  background-color: var(--fondo-tarjeta-hover);
+  border-color: var(--acento-dorado);
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
@@ -139,9 +139,9 @@ body.cultura-body {
 
 .item-rating {
   font-weight: bold;
-  color: var(--accent-gold);
-  background-color: var(--bg-dark);
-  border: 1px solid var(--border-color);
+  color: var(--acento-dorado);
+  background-color: var(--fondo-oscuro);
+  border: 1px solid var(--color-borde);
   width: 32px;
   height: 32px;
   display: flex;
@@ -154,7 +154,7 @@ body.cultura-body {
 .item-title {
   font-size: 1rem;
   font-weight: bold;
-  color: var(--text-main);
+  color: var(--texto-base);
 }
 
 .item-right {
@@ -175,32 +175,32 @@ body.cultura-body {
 
 .status-badge.vista {
   background-color: rgba(124, 161, 132, 0.15);
-  color: var(--accent-green);
-  border: 1px solid var(--accent-green);
+  color: var(--acento-verde);
+  border: 1px solid var(--acento-verde);
 }
 
 .status-badge.pendiente {
   background-color: rgba(211, 152, 106, 0.15);
-  color: var(--accent-gold);
-  border: 1px solid var(--accent-gold);
+  color: var(--acento-dorado);
+  border: 1px solid var(--acento-dorado);
 }
 
 .status-badge.emision, .status-badge.en_emision {
   background-color: rgba(123, 163, 190, 0.15);
-  color: var(--accent-blue);
-  border: 1px solid var(--accent-blue);
+  color: var(--acento-azul);
+  border: 1px solid var(--acento-azul);
 }
 
 .status-badge.abandonada {
   background-color: rgba(197, 106, 101, 0.15);
-  color: var(--accent-red);
-  border: 1px solid var(--accent-red);
+  color: var(--acento-rojo);
+  border: 1px solid var(--acento-rojo);
 }
 
 /* Recommendations Column */
 .recommendations-panel {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
+  background-color: var(--fondo-tarjeta);
+  border: 1px solid var(--color-borde);
   border-radius: 6px;
   padding: 1.5rem;
   align-self: start;
@@ -209,18 +209,18 @@ body.cultura-body {
 .panel-title {
   font-size: 1.3rem;
   text-transform: uppercase;
-  color: var(--accent-gold);
+  color: var(--acento-dorado);
   margin-bottom: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-borde);
   padding-bottom: 0.5rem;
 }
 
 .panel-title span {
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: var(--texto-apagado);
 }
 
 .rec-list {
@@ -238,12 +238,12 @@ body.cultura-body {
   width: 4px;
 }
 .rec-list::-webkit-scrollbar-thumb {
-  background-color: var(--border-color);
+  background-color: var(--color-borde);
 }
 
 .rec-card {
-  background-color: var(--bg-dark);
-  border: 1px solid var(--border-color);
+  background-color: var(--fondo-oscuro);
+  border: 1px solid var(--color-borde);
   padding: 0.8rem;
   border-radius: 4px;
 }
@@ -263,7 +263,7 @@ body.cultura-body {
 .rec-type {
   font-size: 0.7rem;
   text-transform: uppercase;
-  color: var(--accent-blue);
+  color: var(--acento-azul);
 }
 
 /* Form */
@@ -271,7 +271,7 @@ body.cultura-body {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  border-top: 1px dashed var(--border-color);
+  border-top: 1px dashed var(--color-borde);
   padding-top: 1.2rem;
 }
 
@@ -284,13 +284,13 @@ body.cultura-body {
 .form-group label {
   font-size: 0.8rem;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--texto-apagado);
 }
 
 .form-input, .form-textarea, .form-select {
-  background-color: var(--bg-dark);
-  border: 1px solid var(--border-color);
-  color: var(--text-main);
+  background-color: var(--fondo-oscuro);
+  border: 1px solid var(--color-borde);
+  color: var(--texto-base);
   padding: 0.5rem;
   font-family: inherit;
   font-size: 0.9rem;
@@ -300,7 +300,7 @@ body.cultura-body {
 
 .form-input:focus, .form-textarea:focus, .form-select:focus {
   outline: none;
-  border-color: var(--accent-gold);
+  border-color: var(--acento-dorado);
 }
 
 .form-textarea {
@@ -309,7 +309,7 @@ body.cultura-body {
 }
 
 .submit-btn {
-  background-color: var(--accent-gold);
+  background-color: var(--acento-dorado);
   color: #000;
   border: none;
   padding: 0.6rem;
@@ -326,8 +326,8 @@ body.cultura-body {
 }
 
 .submit-btn:disabled {
-  background-color: var(--border-color);
-  color: var(--text-muted);
+  background-color: var(--color-borde);
+  color: var(--texto-apagado);
   cursor: not-allowed;
 }
 
@@ -336,8 +336,8 @@ body.cultura-body {
   text-align: center;
   padding: 0.2rem;
 }
-.form-msg.error { color: var(--accent-red); }
-.form-msg.success { color: var(--accent-green); }
+.form-msg.error { color: var(--acento-rojo); }
+.form-msg.success { color: var(--acento-verde); }
 
 /* Modal Details Drawer */
 .modal-overlay {
@@ -352,8 +352,8 @@ body.cultura-body {
 }
 
 .modal-content {
-  background-color: var(--bg-card);
-  border: 2px solid var(--border-color);
+  background-color: var(--fondo-tarjeta);
+  border: 2px solid var(--color-borde);
   border-radius: 8px;
   width: min(600px, calc(100% - 2rem));
   max-height: 85vh;
@@ -369,26 +369,26 @@ body.cultura-body {
   right: 1rem;
   background: none;
   border: none;
-  color: var(--text-muted);
+  color: var(--texto-apagado);
   font-size: 1.5rem;
   cursor: pointer;
   line-height: 1;
 }
 
 .close-modal-btn:hover {
-  color: var(--text-main);
+  color: var(--texto-base);
 }
 
 .modal-title-area {
   margin-bottom: 1.2rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-borde);
   padding-bottom: 0.8rem;
   padding-right: 2rem;
 }
 
 .modal-title {
   font-size: 1.5rem;
-  color: var(--accent-gold);
+  color: var(--acento-dorado);
   margin-bottom: 0.4rem;
 }
 
@@ -401,7 +401,7 @@ body.cultura-body {
 .modal-section-title {
   font-size: 0.85rem;
   text-transform: uppercase;
-  color: var(--accent-gold);
+  color: var(--acento-dorado);
   margin-bottom: 0.4rem;
   letter-spacing: 1px;
 }
@@ -411,7 +411,7 @@ body.cultura-body {
 }
 
 .modal-body-section p {
-  color: var(--text-muted);
+  color: var(--texto-apagado);
   line-height: 1.5;
   font-size: 0.95rem;
 }
