@@ -1,0 +1,518 @@
+/* Torneo de ajedrez: papel claro, tinta oscura y un verde de tablero como único acento */
+.ajedrez {
+  --papel: #f5f3ee;
+  --papel-2: #ebe7de;
+  --blanco: #fffdf8;
+  --tinta: #1f1e1b;
+  --tinta-suave: #6b675f;
+  --linea: #d6d0c3;
+  --acento: #2f5d50;
+  --acento-claro: #e3ece7;
+  --peligro: #9b3b2f;
+
+  flex: 1;
+  min-height: 100vh;
+  background: var(--papel);
+  color: var(--tinta);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.45;
+}
+
+.ajedrez a {
+  color: var(--acento);
+}
+
+.pagina-ajedrez {
+  width: min(1040px, 100%);
+  margin: 0 auto;
+  padding: 2.5rem 1rem 3rem;
+}
+
+.pagina-ajedrez.estrecha {
+  width: min(420px, 100%);
+}
+
+/* ---------- Cabecera ---------- */
+.cabecera-ajedrez {
+  position: relative;
+  border-bottom: 2px solid var(--tinta);
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Acceso (vista pública) o salir (panel), arriba a la derecha */
+.boton-acceso {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+a.boton-acceso,
+.enlace-cabecera {
+  text-decoration: none;
+}
+
+/* Pestañas del panel */
+.pestanas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 1rem 0 -1rem;
+}
+
+.pestanas a {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.pestanas a.activa {
+  border-color: var(--tinta);
+  background: var(--blanco);
+  color: var(--tinta);
+  margin-bottom: -2px;
+  border-bottom: 2px solid var(--blanco);
+}
+
+.antetitulo {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tinta-suave);
+}
+
+.cabecera-ajedrez h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.resumen {
+  color: var(--tinta-suave);
+}
+
+.navegacion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1.25rem;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.navegacion a {
+  text-decoration: none;
+}
+
+.navegacion a:hover,
+.enlace-boton:hover {
+  text-decoration: underline;
+}
+
+.enlace-boton {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--peligro);
+  cursor: pointer;
+}
+
+/* ---------- Secciones ---------- */
+.seccion-ajedrez {
+  margin-bottom: 2.75rem;
+}
+
+.cabecera-seccion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.cabecera-seccion h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.acciones-seccion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.vacio {
+  padding: 1rem;
+  border: 1px dashed var(--linea);
+  color: var(--tinta-suave);
+}
+
+.suave {
+  color: var(--tinta-suave);
+}
+
+.fuerte {
+  font-weight: 600;
+}
+
+/* ---------- Tablas ---------- */
+.tabla-desplazable {
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--blanco);
+  border: 1px solid var(--linea);
+}
+
+.tabla th,
+.tabla td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--linea);
+  white-space: nowrap;
+}
+
+.tabla th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--tinta-suave);
+  font-weight: 500;
+  background: var(--papel-2);
+}
+
+.tabla tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.tabla .num {
+  text-align: right;
+  width: 1%;
+}
+
+.tabla .derecha {
+  text-align: right;
+}
+
+.tabla .centro {
+  text-align: center;
+}
+
+.tabla tr.retirado td {
+  color: var(--tinta-suave);
+}
+
+.marca {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  padding: 0 0.35rem;
+  border: 1px solid var(--linea);
+  color: var(--tinta-suave);
+}
+
+.nota-tabla {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--tinta-suave);
+}
+
+.tabla-ronda td:nth-child(2),
+.tabla-ronda td:nth-child(4) {
+  width: 45%;
+}
+
+.resultado {
+  font-weight: 600;
+}
+
+/* ---------- Rondas (vista pública) ---------- */
+.lista-rondas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ronda summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--papel-2);
+  border: 1px solid var(--linea);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ronda summary .suave {
+  font-weight: 400;
+}
+
+.ronda[open] summary {
+  border-bottom: 0;
+}
+
+/* ---------- Cuadro ---------- */
+.cuadro {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.columna-cuadro {
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+  flex: 1;
+}
+
+.columna-cuadro h3 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tinta-suave);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.cruces {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 1rem;
+  flex: 1;
+}
+
+.cruce {
+  background: var(--blanco);
+  border: 1px solid var(--linea);
+}
+
+.linea-cruce {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.45rem 0.6rem;
+}
+
+.linea-cruce + .linea-cruce {
+  border-top: 1px solid var(--linea);
+}
+
+.linea-cruce.gana {
+  font-weight: 600;
+  background: var(--acento-claro);
+}
+
+.linea-cruce.pierde {
+  color: var(--tinta-suave);
+}
+
+.semilla {
+  width: 1.4rem;
+  text-align: right;
+  color: var(--tinta-suave);
+  font-weight: 400;
+}
+
+.nota-cruce {
+  padding: 0.3rem 0.6rem;
+  border-top: 1px solid var(--linea);
+  font-size: 0.85rem;
+  color: var(--tinta-suave);
+}
+
+.campeon {
+  padding: 0.75rem;
+  border: 2px solid var(--acento);
+  background: var(--blanco);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* ---------- Formularios (panel) ---------- */
+.ajedrez input,
+.ajedrez select {
+  font: inherit;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--linea);
+  background: var(--blanco);
+  color: var(--tinta);
+  min-width: 0;
+}
+
+.ajedrez input:focus,
+.ajedrez select:focus {
+  outline: 2px solid var(--acento);
+  outline-offset: -1px;
+}
+
+.boton-ajedrez {
+  font: inherit;
+  font-weight: 500;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--acento);
+  background: var(--acento);
+  color: #fff;
+  cursor: pointer;
+}
+
+.boton-ajedrez:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.boton-secundario {
+  background: transparent;
+  color: var(--acento);
+}
+
+.boton-peligro {
+  background: transparent;
+  border-color: var(--peligro);
+  color: var(--peligro);
+}
+
+.formulario-linea {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.formulario-linea label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.casilla {
+  color: var(--tinta-suave);
+}
+
+.lista-editable {
+  border: 1px solid var(--linea);
+  background: var(--blanco);
+}
+
+.fila-editable {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  margin: 0;
+}
+
+.fila-editable + .fila-editable {
+  border-top: 1px solid var(--linea);
+}
+
+.fila-editable > .formulario-linea {
+  margin: 0;
+  flex: 1;
+}
+
+.mesa {
+  width: 4.5rem;
+  color: var(--tinta-suave);
+  font-size: 0.9rem;
+}
+
+.ronda-editable {
+  margin-top: 1.5rem;
+}
+
+.cabecera-ronda {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.ronda-editable h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.formulario-cruce {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.5rem 0.6rem;
+  border-top: 1px dashed var(--linea);
+  background: var(--papel);
+}
+
+.formulario-acceso {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.formulario-acceso label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-weight: 500;
+}
+
+.error {
+  color: var(--peligro);
+}
+
+.aviso {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 2rem;
+  border-left: 3px solid var(--peligro);
+  background: var(--blanco);
+}
+
+/* ---------- Pie ---------- */
+.pie-ajedrez {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--linea);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  .boton-acceso {
+    position: static;
+    width: fit-content;
+    margin: 0 0 0.75rem auto;
+  }
+
+  .cabecera-ajedrez h1 {
+    font-size: 1.7rem;
+  }
+
+  .tabla th,
+  .tabla td {
+    padding: 0.45rem 0.5rem;
+  }
+
+  .tabla-ronda td {
+    white-space: normal;
+  }
+
+  .fila-editable select,
+  .fila-editable input:not([type="checkbox"]) {
+    flex: 1 1 40%;
+  }
+}

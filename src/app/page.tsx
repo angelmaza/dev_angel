@@ -113,6 +113,17 @@ export default function Inicio() {
                 Landing page simple para un comercio local. En proceso
               </p>
             </a>
+
+            <a className="tarjeta-proyecto borde-pixel" href="/ajedrez" target="_blank" rel="noopener noreferrer">
+              <div className="cabecera-tarjeta">
+                <span className="etiqueta-proyecto">[ 08 ]</span>
+                <span className="tipo-proyecto">APP</span>
+              </div>
+              <h3>Torneo de ajedrez</h3>
+              <p>
+                Gestión de un torneo: liguilla por sistema suizo con desempates y eliminatoria final. Datos en Neon.
+              </p>
+            </a>
           </div>
         </section>
 
