@@ -1,0 +1,324 @@
+/* Guía de lectura del Cosmere: azul noche con estrellas y cabecera dorada */
+.cosmere {
+  --cielo: #0f2331;
+  --cielo-claro: #16303f;
+  --dorado: #d9b75a;
+  --dorado-oscuro: #8a6f2c;
+  --texto: #f3efe6;
+  --texto-suave: #a9b6c0;
+  --separador: rgba(255, 255, 255, 0.35);
+  --ancho-etiqueta: 44px;
+  --ancho-columna: 150px;
+
+  position: relative;
+  flex: 1;
+  min-height: 100vh;
+  color: var(--texto);
+  background-color: var(--cielo);
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.7), transparent 60%),
+    radial-gradient(1px 1px at 33% 72%, rgba(255, 255, 255, 0.5), transparent 60%),
+    radial-gradient(1.5px 1.5px at 58% 34%, rgba(255, 236, 170, 0.8), transparent 60%),
+    radial-gradient(1px 1px at 77% 81%, rgba(255, 255, 255, 0.5), transparent 60%),
+    radial-gradient(1.5px 1.5px at 89% 12%, rgba(255, 236, 170, 0.7), transparent 60%),
+    radial-gradient(1px 1px at 46% 92%, rgba(255, 255, 255, 0.4), transparent 60%),
+    radial-gradient(1px 1px at 5% 55%, rgba(255, 255, 255, 0.5), transparent 60%),
+    radial-gradient(1px 1px at 68% 58%, rgba(255, 255, 255, 0.4), transparent 60%);
+  background-size: 420px 420px;
+}
+
+/* ---------- Cabecera ---------- */
+.cosmere-cabecera {
+  padding: 28px 16px 22px;
+  text-align: center;
+  background: linear-gradient(180deg, var(--dorado-oscuro), #3b3a26 70%, var(--cielo));
+  border-bottom: 1px solid rgba(217, 183, 90, 0.4);
+}
+
+.cosmere-cabecera h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+.cosmere-cabecera p {
+  margin: 6px 0 0;
+  color: #eadfbf;
+  font-size: 0.95rem;
+}
+
+/* ---------- Selector de orden (arriba a la derecha) ---------- */
+.cosmere-selector {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  z-index: 10;
+  display: flex;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(15, 35, 49, 0.75);
+  border: 1px solid rgba(217, 183, 90, 0.5);
+}
+
+.cosmere-selector button {
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #eadfbf;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cosmere-selector button:hover {
+  color: #fff;
+}
+
+.cosmere-selector button[aria-pressed="true"] {
+  background: var(--dorado);
+  color: var(--cielo);
+}
+
+/* ---------- Mapa ---------- */
+/* El mapa ocupa el 90 % del ancho y las columnas se reparten el espacio, sin barra de desplazamiento */
+.cosmere-contenido {
+  width: 90%;
+  margin: 0 auto;
+  padding: 0 0 40px;
+}
+
+.cosmere-mapa {
+  display: grid;
+}
+
+/* Solo en pantallas estrechas (móvil, tablet) el mapa se desplaza en horizontal */
+@media (max-width: 1100px) {
+  .cosmere-contenido {
+    width: auto;
+    padding: 0 16px 40px;
+  }
+
+  .cosmere-desplazable {
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .cosmere-mapa {
+    min-width: calc(var(--ancho-etiqueta) + var(--columnas) * var(--ancho-columna));
+  }
+}
+
+/* Fila de planetas y sistemas: se queda fija arriba al desplazarse */
+.cosmere-cabecera-sistemas {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: grid;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: rgba(15, 35, 49, 0.92);
+  backdrop-filter: blur(4px);
+  border-bottom: 1px solid var(--separador);
+}
+
+/* Cabecera de cada columna, inclinada: planeta en grande y sistema debajo */
+.cosmere-sistema {
+  grid-row: 1;
+  height: 170px;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 0 14px 8px;
+}
+
+.cosmere-sistema span {
+  display: flex;
+  flex-direction: column;
+  transform: rotate(-35deg);
+  transform-origin: left bottom;
+  white-space: nowrap;
+  font-style: italic;
+  line-height: 1.05;
+}
+
+.cosmere-sistema strong {
+  font-size: 1.45rem;
+  font-weight: 900;
+}
+
+.cosmere-sistema small {
+  font-size: 0.85rem;
+  font-weight: 800;
+  font-variant: small-caps;
+  opacity: 0.85;
+}
+
+/* Etiquetas de fase en vertical */
+.cosmere-fase {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.cosmere-fase span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.cosmere-fase strong {
+  font-weight: 900;
+  font-style: italic;
+}
+
+.cosmere-fase em {
+  font-weight: 400;
+  text-transform: none;
+  color: var(--texto-suave);
+}
+
+.con-separador {
+  border-bottom: 1px dashed var(--separador);
+}
+
+/* Celdas */
+.cosmere-celda {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 50px;
+}
+
+.cosmere-celda.es-hueco {
+  min-height: 14px;
+}
+
+/* Fases con una sola fila o sin libros: alto suficiente para su etiqueta */
+.cosmere-celda.fila-unica {
+  min-height: 92px;
+}
+
+.cosmere-celda.fase-vacia {
+  min-height: 150px;
+}
+
+.tramo {
+  position: absolute;
+  left: 20px;
+  width: 3px;
+  background: var(--color);
+}
+
+.tramo-arriba {
+  top: 0;
+  height: 50%;
+}
+
+.tramo-abajo {
+  top: 50%;
+  bottom: 0;
+}
+
+.cosmere-celda.es-hueco .tramo-arriba,
+.cosmere-celda.es-hueco .tramo-abajo {
+  top: 0;
+  height: 100%;
+}
+
+.tramo.punteado {
+  background: repeating-linear-gradient(var(--color) 0 3px, transparent 3px 7px);
+  width: 2px;
+}
+
+/* Libro: punto + título */
+.cosmere-libro {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 6px;
+  padding: 4px 4px 4px 12px;
+  cursor: default;
+}
+
+.cosmere-libro .punto {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color);
+  border: 3px solid #f6f2e8;
+  box-shadow: 0 0 0 2px var(--cielo);
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Solo el punto bajo el ratón se resalta */
+.cosmere-libro:hover .punto {
+  transform: scale(1.4);
+  box-shadow: 0 0 0 2px var(--cielo), 0 0 14px 4px var(--color);
+}
+
+.cosmere-libro:hover .titulo {
+  color: #fff;
+}
+
+.cosmere-libro .titulo {
+  min-width: 0;
+  font-size: clamp(0.72rem, 0.55rem + 0.3vw, 0.86rem);
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.cosmere-libro sup {
+  color: var(--dorado);
+  cursor: help;
+}
+
+.cosmere-libro.alternativa .punto {
+  background: var(--cielo);
+  border: 2px dashed #f6f2e8;
+}
+
+.cosmere-libro.alternativa .titulo {
+  font-weight: 400;
+  color: var(--texto-suave);
+}
+
+.cosmere-libro small {
+  display: block;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .cosmere {
+    --ancho-etiqueta: 34px;
+    --ancho-columna: 130px;
+  }
+
+  .cosmere-sistema {
+    height: 140px;
+  }
+
+  .cosmere-selector {
+    position: static;
+    width: fit-content;
+    margin: 12px auto 0;
+  }
+
+  .cosmere-sistema strong {
+    font-size: 1.15rem;
+  }
+}

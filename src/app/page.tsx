@@ -114,6 +114,17 @@ export default function Inicio() {
               </p>
             </a>
 
+            <a className="tarjeta-proyecto borde-pixel" href="/cosmere" target="_blank" rel="noopener noreferrer">
+              <div className="cabecera-tarjeta">
+                <span className="etiqueta-proyecto">[ 07 ]</span>
+                <span className="tipo-proyecto">WEB</span>
+              </div>
+              <h3>Cosmere: guía de lectura</h3>
+              <p>
+                Los libros del Cosmere de Brandon Sanderson, el sistema donde transcurren y el orden de lectura.
+              </p>
+            </a>
+
             <a className="tarjeta-proyecto borde-pixel" href="/ajedrez" target="_blank" rel="noopener noreferrer">
               <div className="cabecera-tarjeta">
                 <span className="etiqueta-proyecto">[ 08 ]</span>
