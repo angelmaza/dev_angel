@@ -1,14 +1,23 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { Nunito } from "next/font/google";
 import { FASES, LIBROS, SISTEMAS, type Libro } from "./datos";
+import {
+  TEXTOS, leerIdioma, nombreFase, nombrePlaneta, nombreSistema, notaLibro, tituloLibro, type Idioma,
+} from "./textos";
+import { FICHAS } from "./fichas";
 import SelectorOrden from "./SelectorOrden";
 import "./cosmere.css";
 
-export const metadata: Metadata = {
-  title: "Cosmere · Guía de lectura",
-  description: "Libros del Cosmere de Brandon Sanderson por sistema y orden de lectura",
-};
+interface PropsPagina {
+  searchParams: Promise<{ lang?: string | string[] }>;
+}
+
+export async function generateMetadata({ searchParams }: PropsPagina): Promise<Metadata> {
+  const textos = TEXTOS[leerIdioma((await searchParams).lang)];
+  return { title: textos.tituloPagina, description: textos.descripcion };
+}
 
 const fuente = Nunito({ subsets: ["latin"], weight: ["400", "700", "800", "900"], style: ["normal", "italic"] });
 
@@ -29,7 +38,7 @@ interface Fila {
 
 const columnas = `var(--ancho-etiqueta) repeat(${SISTEMAS.length}, minmax(0, 1fr))`;
 
-function Mapa({ grupos, filas }: { grupos: Grupo[]; filas: Fila[] }) {
+function Mapa({ grupos, filas, idioma }: { grupos: Grupo[]; filas: Fila[]; idioma: Idioma }) {
   const ultimaFila = filas.length - 1;
 
   // Tramo de cada sistema: desde su primer libro hasta el último (o hasta el final si sigue abierto)
@@ -42,13 +51,13 @@ function Mapa({ grupos, filas }: { grupos: Grupo[]; filas: Fila[] }) {
 
   return (
     <div className="cosmere-mapa" style={{ gridTemplateColumns: columnas, ["--columnas" as string]: SISTEMAS.length }}>
-      {/* Cabecera fija al desplazarse: planeta (grande) y sistema */}
+      {/* Cabecera fija al desplazarse: planeta (grande) y sistema debajo */}
       <div className="cosmere-cabecera-sistemas" style={{ gridTemplateColumns: columnas }}>
         {SISTEMAS.map((sistema, s) => (
           <div key={sistema.id} className="cosmere-sistema" style={{ gridColumn: s + 2, color: sistema.color }}>
             <span>
-              <strong>{sistema.planeta}</strong>
-              <small>Sistema {sistema.nombre}</small>
+              <strong>{nombrePlaneta(sistema, idioma)}</strong>
+              <small>{TEXTOS[idioma].sistema(nombreSistema(sistema, idioma))}</small>
             </span>
           </div>
         ))}
@@ -76,6 +85,7 @@ function Mapa({ grupos, filas }: { grupos: Grupo[]; filas: Fila[] }) {
           const arriba = primero >= 0 && primero < r && r <= fin;
           const abajo = primero >= 0 && primero <= r && r < fin;
           const libro = fila.libros.find((l) => l.sistema === sistema.id);
+          const nota = libro && notaLibro(libro, idioma);
           const separador = fila.ultimaDeGrupo && r < ultimaFila;
           return (
             <div
@@ -86,13 +96,20 @@ function Mapa({ grupos, filas }: { grupos: Grupo[]; filas: Fila[] }) {
               {arriba && <span className={`tramo tramo-arriba ${r > ultimoLibro ? "punteado" : ""}`} />}
               {abajo && <span className={`tramo tramo-abajo ${r >= ultimoLibro ? "punteado" : ""}`} />}
               {libro && (
-                <div className={`cosmere-libro ${libro.alternativa ? "alternativa" : ""}`}>
+                <div className={`cosmere-libro ${libro.alternativa ? "alternativa" : ""}`} tabIndex={0}>
                   <span className="punto" aria-hidden="true" />
                   <span className="titulo">
-                    {libro.titulo}
-                    {libro.nota && !libro.alternativa && <sup title={libro.nota}>*</sup>}
-                    {libro.alternativa && libro.nota && <small>{libro.nota}</small>}
+                    {tituloLibro(libro, idioma)}
+                    {nota && !libro.alternativa && <sup aria-hidden="true">*</sup>}
+                    {libro.alternativa && nota && <small>{nota}</small>}
                   </span>
+                  <FichaLibro
+                    libro={libro}
+                    idioma={idioma}
+                    // Abajo y hacia la derecha por defecto; en la mitad baja del mapa o en las
+                    // últimas columnas se abre hacia arriba o hacia la izquierda para no salirse
+                    clase={`${r > filas.length / 2 ? "hacia-arriba" : ""} ${s >= SISTEMAS.length - 3 ? "hacia-izquierda" : ""}`}
+                  />
                 </div>
               )}
             </div>
@@ -103,16 +120,26 @@ function Mapa({ grupos, filas }: { grupos: Grupo[]; filas: Fila[] }) {
   );
 }
 
+// Ficha que aparece al pasar el ratón (o al tocar el libro): páginas, resumen y nota
+function FichaLibro({ libro, idioma, clase }: { libro: Libro; idioma: Idioma; clase: string }) {
+  const ficha = FICHAS[libro.tituloEn];
+  if (!ficha) return null;
+  const nota = !libro.alternativa && notaLibro(libro, idioma);
+  return (
+    <span className={`cosmere-ficha ${clase}`} role="tooltip">
+      <strong>{tituloLibro(libro, idioma)}</strong>
+      {ficha.paginas && <em>{TEXTOS[idioma].paginas(ficha.paginas)}</em>}
+      <span>{idioma === "en" ? ficha.resumenEn : ficha.resumen}</span>
+      {nota && <small>* {nota}</small>}
+    </span>
+  );
+}
+
 // Orden de lectura: cada fase es un grupo, con un hueco arriba, sus filas de libros y un hueco abajo
-function vistaLectura() {
+function vistaLectura(idioma: Idioma) {
   const grupos: Grupo[] = FASES.map((fase) => ({
     id: fase.id,
-    etiqueta: (
-      <>
-        <strong>{fase.nombre}</strong>
-        {fase.enProceso && <em> (en proceso)</em>}
-      </>
-    ),
+    etiqueta: <strong>{nombreFase(fase, idioma)}</strong>,
   }));
 
   const filas: Fila[] = [];
@@ -128,11 +155,11 @@ function vistaLectura() {
     filas.push({ grupo: fase.id, tipo: "hueco", libros: [], ultimaDeGrupo: true });
   }
 
-  return <Mapa grupos={grupos} filas={filas} />;
+  return <Mapa grupos={grupos} filas={filas} idioma={idioma} />;
 }
 
 // Orden de publicación: un libro por fila, agrupados por año
-function vistaPublicacion() {
+function vistaPublicacion(idioma: Idioma) {
   const publicados = LIBROS.filter((l) => l.publicado && !l.alternativa).sort((a, b) =>
     a.publicado!.localeCompare(b.publicado!)
   );
@@ -146,21 +173,30 @@ function vistaPublicacion() {
     ultimaDeGrupo: i === publicados.length - 1 || anio(publicados[i + 1]) !== anio(libro),
   }));
 
-  return <Mapa grupos={grupos} filas={filas} />;
+  return <Mapa grupos={grupos} filas={filas} idioma={idioma} />;
 }
 
-export default function PaginaCosmere() {
+export default async function PaginaCosmere({ searchParams }: PropsPagina) {
+  const idioma = leerIdioma((await searchParams).lang);
+  const textos = TEXTOS[idioma];
+
   return (
-    <div className={`${fuente.className} cosmere`} lang="es">
+    <div className={`${fuente.className} cosmere`} lang={idioma}>
+      <nav className="cosmere-idioma" aria-label={textos.idioma}>
+        <Link href="/cosmere" scroll={false} aria-current={idioma === "en" ? "true" : undefined}>ENG</Link>
+        <Link href="/cosmere?lang=es" scroll={false} aria-current={idioma === "es" ? "true" : undefined}>ESP</Link>
+      </nav>
+
       <header className="cosmere-cabecera">
-        <h1>Cosmere: Guía de lectura</h1>
-        <p>Los libros de Brandon Sanderson, el sistema donde transcurren y en qué orden leerlos</p>
+        <h1>{textos.titulo}</h1>
       </header>
 
       <main className="cosmere-contenido">
-        <div className="cosmere-desplazable">
-          <SelectorOrden lectura={vistaLectura()} publicacion={vistaPublicacion()} />
-        </div>
+        <SelectorOrden
+          etiquetas={{ grupo: textos.ordenarPor, lectura: textos.lectura, publicacion: textos.publicacion }}
+          lectura={vistaLectura(idioma)}
+          publicacion={vistaPublicacion(idioma)}
+        />
       </main>
     </div>
   );
