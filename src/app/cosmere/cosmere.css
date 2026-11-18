@@ -159,6 +159,8 @@
   .cosmere-desplazable {
     overflow-x: auto;
     padding-bottom: 8px;
+    /* El pellizco dentro del recuadro lo gestiona SelectorOrden (zoom del mapa, no de la página) */
+    touch-action: pan-x pan-y;
   }
 
   .cosmere-mapa {
